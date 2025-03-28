@@ -1,0 +1,408 @@
+{
+	"info": {
+		"_postman_id": "08a9045d-041e-457c-a2e2-8094a45e2f77",
+		"name": "FiiPractic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24478282",
+		"_collection_link": "https://orange-zodiac-182687.postman.co/workspace/onePULSE~48e64d8c-df9e-4436-8275-9715db8ef0af/collection/24478282-08a9045d-041e-457c-a2e2-8094a45e2f77?action=share&source=collection_link&creator=24478282"
+	},
+	"item": [
+		{
+			"name": "administrator",
+			"item": [
+				{
+					"name": "equipments",
+					"item": [
+						{
+							"name": "types",
+							"item": [
+								{
+									"name": "create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"eqType1\",\r\n    \"description\": \"eqType1\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/types",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"types"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/types/search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"types",
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"eqType1\",\r\n    \"uuid\": \"d935a038-0949-48c7-9580-4e691ad7eb49\",\r\n    \"description\": \"eqType1 - update\",\r\n    \"version\": 1,\r\n    \"updated\": \"2025-03-25T09:44:56+02:00\",\r\n    \"updatedBy\": \"system\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/types",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"types"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"toolType\": \"TOOL\",\r\n    \"name\": \"tool1\",\r\n    \"alias\": \"T1\",\r\n    \"description\": \"tool 1 description\",\r\n    \"division\": \"No Division\",\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/types?id=34c8a388-eebd-4826-a465-9a9998b91bac&version=1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"types"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "34c8a388-eebd-4826-a465-9a9998b91bac"
+												},
+												{
+													"key": "version",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "tools",
+							"item": [
+								{
+									"name": "create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"tool2\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"eqType1\",\r\n        \"uuid\": \"e07359e9-acb0-4daa-bc0f-5f949ced2ff7\"\r\n    },\r\n    \"alias\": \"T1\",\r\n    \"description\": \"tool 1 description\",\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools/search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools",
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n        \"name\": \"tool1\",\r\n        \"equipmentTypeIdentity\": {\r\n            \"uuid\": \"e07359e9-acb0-4daa-bc0f-5f949ced2ff7\",\r\n            \"name\": \"eqType1\"\r\n        },\r\n        \"active\": true,\r\n        \"uuid\": \"0b2c5366-f77c-4cee-bd51-9e9c646035ac\",\r\n        \"description\": \"tool 1 description - up\",\r\n        \"version\": 1,\r\n        \"updated\": \"2025-03-25T10:06:01+02:00\",\r\n        \"updatedBy\": \"system\",\r\n        \"alias\": \"T1\"\r\n    }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"toolType\": \"TOOL\",\r\n    \"name\": \"tool1\",\r\n    \"alias\": \"T1\",\r\n    \"description\": \"tool 1 description\",\r\n    \"division\": \"No Division\",\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools?id=407a538f-e7b2-47f8-be1f-81d44a54e0a8&version=1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "407a538f-e7b2-47f8-be1f-81d44a54e0a8"
+												},
+												{
+													"key": "version",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "metrics",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/q/metrics",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"q",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wip",
+			"item": [
+				{
+					"name": "metrics",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:6000/q/metrics",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6000",
+							"path": [
+								"q",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "baltabog",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{uaSessionId}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"\r",
+					"\r",
+					"pm.sendRequest({\r",
+					"    url: 'https://mes-rh09-pet.camline.com:18443/ua-rest/api/ua/public/uaLogin',\r",
+					"    method: 'POST',\r",
+					"    header: { 'Content-Type': 'application/json'},\r",
+					"    body: \"{\\\"transactionId\\\": \\\"PULSE-cafaa500-4217-4a50-ac92-d4bf26050948\\\", \\\"userName\\\": \\\"baltabog\\\", \\\"password\\\": [98, 97, 108, 116, 97, 98, 111, 103], \\\"timeout\\\": 100, \\\"application\\\": \\\"PULSE\\\"}\"\r",
+					"},  function(err, response) {\r",
+					"    // Set the environment variable for token\r",
+					"    var response_json = response.json();\r",
+					"    var uaSessionIdResp = response_json.sessionId;\r",
+					"    pm.environment.set('uaSessionId', uaSessionIdResp);\r",
+					"    console.log(uaSessionIdResp);\r",
+					"}); "
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

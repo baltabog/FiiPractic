@@ -1,0 +1,56 @@
+# general properties
+quarkus:
+  http:
+    port: 6000
+  log:
+    min-level: TRACE
+    console:
+      enable: true
+      format: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-30t (%-30F:%-25M:%-4L)\t%-6p\t%m\n"
+    file:
+      enable: true
+      path: log/server.log
+      format: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-30t (%-30F:%-25M:%-4L)\t%-6p\t%m\n"
+      rotation:
+        max-backup-index: 20
+        rotate-on-boot: true
+  datasource:
+    jdbc:
+      max-size: 16
+      min-size: 4
+      initial-size: 4
+    db-kind: mariadb
+    username: mes_wip_dev
+    password: mes_wip_dev
+    devservices:
+      enabled: true
+      port: 5500
+      command: [ 'mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin' ]
+      volumes:
+        "../data/mariadb_wip": /var/lib/mysql
+        "../data/mariadb_wip_conf": /etc/mysql
+      properties:
+        character_set_server: utf8mb4
+        collation_server: utf8mb4_bin
+  hibernate-orm:
+    database:
+      generation: update
+  hibernate-envers:
+    audit-strategy: org.hibernate.envers.strategy.internal.ValidityAuditStrategy
+    allow-identifier-reuse: true
+    store-data-at-delete: true
+
+"%dev":
+  quarkus:
+    log:
+      level: INFO
+    hibernate-orm:
+      log:
+        sql: true
+        bind-parameters: true
+
+"%production":
+    log:
+      level: INFO
+      console:
+        enable: false

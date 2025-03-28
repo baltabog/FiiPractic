@@ -1,0 +1,603 @@
+openapi: 3.0.3
+info:
+  title: MES - WorkInProgress
+  version: 1.0.0
+servers:
+- url: "http://{appHost}:{appPort}"
+  variables:
+    appHost:
+      default: 127.0.0.1
+    appPort:
+      default: "6000"
+paths:
+  /workInProgress/orders/{orderId}/status/{newOrderStatus}:
+    post:
+      description: "Statuses legend: <br /> ON_HOLD - this is default status of all\
+        \ jobs. No one can change job status on this. <br /> STARTED - plant start\
+        \ to work at this job. This status can be set if job have one of the statuses:\
+        \ ON_HOLD, PAUSED <br /> PAUSED - plant pause work on this job. This status\
+        \ can be set if job have status: STARTED <br /> COMPLETED - job completed,\
+        \ no more work on this job requested; This status can be set if job have status:\
+        \ STARTED <br /> "
+      operationId: changeOrderStatus
+      parameters:
+      - description: Order id
+        explode: false
+        in: path
+        name: orderId
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: simple
+      - description: new order status
+        explode: false
+        in: path
+        name: newOrderStatus
+        required: true
+        schema:
+          $ref: '#/components/schemas/orderStatusType'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderStatusDTO'
+          description: OK - Order status was changed
+        "400":
+          description: FAIL - Order status can not be changed (job can not achieve
+            new status because of current one)
+        "404":
+          description: FAIL - Order not found
+        "500":
+          description: FAIL - Server internal error (all other exceptions)
+      summary: Change the status of one job.
+      tags:
+      - Order
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Order
+  /workInProgress/orders/status/search:
+    post:
+      operationId: searchOrders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/OrderStatusDTO'
+                type: array
+          description: OK - Get matching filter criteria OrderStatuses
+          headers:
+            Content-Range:
+              description: "Indicates where the partial responded items belongs to,\
+                \ e.g. \"items 1-20/538\""
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: "Return a list of Orders with their statuses. <br /> Filter criteria:\
+        \ jobName (sorting also possible), status (sorting also possible), lastChange\
+        \ (sorting also possible)."
+      tags:
+      - Order
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Order
+  /workInProgress/equipments/status/check:
+    post:
+      description: "<b>Input statuses legend:</b> <br /> STOP - set equipment in state:\
+        \ STOPPED; Previous equipment should be in: ON_REPAIR or WAIT_FOR_MATERIALS\
+        \ state; <br /> ON_REPAIR - set equipment in state: ON_REPAIR; Previous equipment\
+        \ should be in: WAIT_FOR_MATERIALS state; <br /> START - set equipment in\
+        \ state: WAIT_FOR_MATERIALS; Previous equipment should be in: STOPPED state;\
+        \ <br /> PROCESS_START - set equipment in state: PROCESSING; Previous equipment\
+        \ should be in: WAIT_FOR_MATERIALS state; <br /> PROCESS_SUCCEED - set equipment\
+        \ in state: WAIT_FOR_MATERIALS; Previous equipment should be in: PROCESSING\
+        \ state; <br /> PROCESS_FAIL - set equipment in state: WAIT_FOR_MATERIALS;\
+        \ Previous equipment should be in: PROCESSING state; <br /> <b>Flow:</b> check\
+        \ if equipment is part of an active order <br /> check if equipment status\
+        \ is in previous equipment status list. <br /> if <i>inputStatus</i> = PROCESS_START\
+        \ then check existence of requested input material inside of process step"
+      operationId: checkChangeEqStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEquipmentStatusRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/checkChangeEqStatus_200_response'
+          description: OK - Order status was changed
+      summary: Check if the equipment status can be changed.
+      tags:
+      - Equipment
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Equipment
+  /workInProgress/equipments/status:
+    post:
+      description: "<b>Input statuses legend:</b> <br /> STOP - set equipment in state:\
+        \ STOPPED; Previous equipment should be in: ON_REPAIR or WAIT_FOR_MATERIALS\
+        \ state; <br /> ON_REPAIR - set equipment in state: ON_REPAIR; Previous equipment\
+        \ should be in: WAIT_FOR_MATERIALS state; <br /> START - set equipment in\
+        \ state: WAIT_FOR_MATERIALS; Previous equipment should be in: STOPPED state;\
+        \ <br /> PROCESS_START - set equipment in state: PROCESSING; Previous equipment\
+        \ should be in: WAIT_FOR_MATERIALS state; <br /> PROCESS_SUCCEED - set equipment\
+        \ in state: WAIT_FOR_MATERIALS; Previous equipment should be in: PROCESSING\
+        \ state; <br /> PROCESS_FAIL - set equipment in state: WAIT_FOR_MATERIALS;\
+        \ Previous equipment should be in: PROCESSING state; <br /> <b>Flow:</b> check\
+        \ if equipment is part of an active order <br /> check if equipment status\
+        \ is in previous equipment status list <br /> if <i>inputStatus</i> = PROCESS_START\
+        \ then { <br /> check existence of requested input material inside of process\
+        \ step; <br /> update material quantities <br /> } <br /> if <i>inputStatus</i>\
+        \ = PROCESS_SUCCEED || PROCESS_FAIL then { <br /> update material quantities\
+        \ <br /> } <br /> update equipment status as described previously <br /> "
+      operationId: changeEqStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEquipmentStatusRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/checkChangeEqStatus_200_response'
+          description: OK - Order status was changed
+      summary: Check if the equipment status can be changed.
+      tags:
+      - Equipment
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Equipment
+  /workInProgress/statistics/time/orders/{orderId}:
+    post:
+      description: "<b>Flow</b><br /> - select order - check over order statuses and\
+        \ create statistic by states: ON_HOLD, STARTED, PAUSED, COMPLETED"
+      operationId: createOrderTimeStatistics
+      parameters:
+      - description: Order id
+        explode: false
+        in: path
+        name: orderId
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TimeStatisticDTO'
+                type: array
+          description: OK - Get TimeStatisticDTO for order
+      summary: Calculate time statistics for an order
+      tags:
+      - TimeStatistics
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: TimeStatistics
+  /workInProgress/statistics/time/equipments/{equipmentId}:
+    post:
+      description: "<b>Flow</b><br /> - select order - check over order statuses and\
+        \ create statistic by states: STOPPED, ON_REPAIR, WAIT_FOR_MATERIALS, PROCESSING"
+      operationId: createEquipmentTimeStatistics
+      parameters:
+      - description: Equipment id
+        explode: false
+        in: path
+        name: equipmentId
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TimeStatisticDTO'
+                type: array
+          description: OK - Get TimeStatisticDTO for equipment
+      summary: Calculate time statistics for an order
+      tags:
+      - TimeStatistics
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: TimeStatistics
+components:
+  schemas:
+    nameType:
+      minLength: 1
+      type: string
+    uuidType:
+      maxLength: 36
+      minLength: 1
+      type: string
+    updatedType:
+      description: e.g. 2017-07-21T17:32:28Z
+      format: date-time
+      readOnly: true
+      type: string
+    orderStatusType:
+      enum:
+      - ON_HOLD
+      - STARTED
+      - PAUSED
+      - COMPLETED
+      type: string
+    inputEqStatusType:
+      enum:
+      - STOP
+      - ON_REPAIR
+      - START
+      - PROCESS_START
+      - PROCESS_SUCCEED
+      - PROCESS_FAIL
+      type: string
+    eqStatusType:
+      enum:
+      - STOPPED
+      - ON_REPAIR
+      - WAIT_FOR_MATERIALS
+      - PROCESSING
+      type: string
+    IdentityDTO:
+      example:
+        name: name
+        uuid: uuid
+      properties:
+        uuid:
+          maxLength: 36
+          minLength: 1
+          type: string
+        name:
+          minLength: 1
+          type: string
+      required:
+      - name
+      - uuid
+      type: object
+    OrderStatusDTO:
+      example:
+        identity:
+          name: name
+          uuid: uuid
+        lastChange: 2000-01-23T04:56:07.000+00:00
+        status: ON_HOLD
+      properties:
+        identity:
+          $ref: '#/components/schemas/IdentityDTO'
+        status:
+          $ref: '#/components/schemas/orderStatusType'
+        lastChange:
+          description: e.g. 2017-07-21T17:32:28Z
+          format: date-time
+          readOnly: true
+          type: string
+      required:
+      - identity
+      - status
+      type: object
+    UpdateEquipmentStatusRequest:
+      example:
+        inputStatus: STOP
+        equipment:
+          name: name
+          uuid: uuid
+      properties:
+        equipment:
+          $ref: '#/components/schemas/IdentityDTO'
+        inputStatus:
+          $ref: '#/components/schemas/inputEqStatusType'
+      required:
+      - equipment
+      - inputStatus
+      type: object
+    UpdateEquipmentStatusResponse:
+      properties:
+        identity:
+          $ref: '#/components/schemas/IdentityDTO'
+        equipment:
+          $ref: '#/components/schemas/IdentityDTO'
+        equipmentStatus:
+          $ref: '#/components/schemas/eqStatusType'
+        lastChange:
+          description: e.g. 2017-07-21T17:32:28Z
+          format: date-time
+          readOnly: true
+          type: string
+      required:
+      - equipment
+      - equipmentStatus
+      - order
+      type: object
+    StatusTimeStatisticDTO:
+      properties:
+        status:
+          readOnly: true
+          type: string
+        totalTime:
+          minimum: 0
+          readOnly: true
+          type: integer
+        longestPeriod:
+          minimum: 0
+          readOnly: true
+          type: integer
+        smallerPeriod:
+          minimum: 0
+          readOnly: true
+          type: integer
+      type: object
+    TimeStatisticDTO:
+      example:
+        timeStatistics:
+        - name: name
+          uuid: uuid
+        - name: name
+          uuid: uuid
+        interrogationItem:
+          name: name
+          uuid: uuid
+      properties:
+        interrogationItem:
+          $ref: '#/components/schemas/IdentityDTO'
+        timeStatistics:
+          items:
+            $ref: '#/components/schemas/IdentityDTO'
+          readOnly: true
+          type: array
+      type: object
+    FilterParamType:
+      example:
+        outerOperator: and
+        criteria:
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        criteriaGroups:
+        - outerOperator: and
+          criteria:
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          criteriaGroups:
+          - null
+          - null
+        - outerOperator: and
+          criteria:
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          criteriaGroups:
+          - null
+          - null
+      properties:
+        outerOperator:
+          default: and
+          enum:
+          - and
+          - or
+          type: string
+        criteriaGroups:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaGroupType'
+          type: array
+        criteria:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaType'
+          type: array
+      type: object
+    FilterParamCriteriaGroupType:
+      example:
+        outerOperator: and
+        criteria:
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        criteriaGroups:
+        - null
+        - null
+      properties:
+        outerOperator:
+          default: and
+          enum:
+          - and
+          - or
+          type: string
+        criteria:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaType'
+          type: array
+        criteriaGroups:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaGroupType'
+          type: array
+      required:
+      - criteria
+      type: object
+    FilterParamCriteriaType:
+      example:
+        propertyName: propertyName
+        values:
+        - values
+        - values
+        operator: eq
+      properties:
+        propertyName:
+          type: string
+        operator:
+          enum:
+          - eq
+          - ne
+          - like
+          - not_like
+          - lt
+          - le
+          - gt
+          - ge
+          - is_null
+          - is_not_null
+          - in
+          - not_in
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+      required:
+      - operator
+      - propertyName
+      type: object
+    SortByType:
+      description: "Comma separated list with property names to sort, e.g. \"sort-by=asc:name,desc:updated\"\
+        ."
+      type: string
+    PagingOffsetType:
+      default: 0
+      description: Number of items to skip before returning the results.
+      format: int32
+      minimum: 0
+      type: integer
+    PagingLimitType:
+      default: 1000000
+      description: Maximum number of items to return. Limit value 0 will disable paging
+        and all items are returned.
+      format: int32
+      minimum: 0
+      type: integer
+    SearchType:
+      example:
+        filter:
+          outerOperator: and
+          criteria:
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          criteriaGroups:
+          - outerOperator: and
+            criteria:
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            criteriaGroups:
+            - null
+            - null
+          - outerOperator: and
+            criteria:
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            criteriaGroups:
+            - null
+            - null
+        offset: 0
+        limit: 0
+        sortBy: sortBy
+      properties:
+        sortBy:
+          description: "Comma separated list with property names to sort, e.g. \"\
+            sort-by=asc:name,desc:updated\"."
+          type: string
+        offset:
+          default: 0
+          description: Number of items to skip before returning the results.
+          format: int32
+          minimum: 0
+          type: integer
+        limit:
+          default: 1000000
+          description: Maximum number of items to return. Limit value 0 will disable
+            paging and all items are returned.
+          format: int32
+          minimum: 0
+          type: integer
+        filter:
+          $ref: '#/components/schemas/FilterParamType'
+      type: object
+    checkChangeEqStatus_200_response:
+      example:
+        statusCanBeChanged: true
+      properties:
+        statusCanBeChanged:
+          type: boolean
+      type: object

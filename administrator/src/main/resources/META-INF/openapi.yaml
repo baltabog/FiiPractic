@@ -1,0 +1,1223 @@
+openapi: 3.0.3
+info:
+  title: MES - Administrator
+  version: 1.0.0
+servers:
+- url: "http://{appHost}:{appPort}"
+  variables:
+    appHost:
+      default: 127.0.0.1
+    appPort:
+      default: "5000"
+paths:
+  /administrator/equipments/types:
+    delete:
+      operationId: deleteEquipmentTypes
+      parameters:
+      - description: UUID requested to be deleted
+        explode: true
+        in: query
+        name: uuid
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: form
+      - description: Version that belongs to the UUIDs
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          $ref: '#/components/schemas/versionType'
+        style: form
+      responses:
+        "204":
+          description: "success, no content"
+        "403":
+          description: operation not allowed
+        "404":
+          description: item not found
+      summary: Delete equipment type by uuid and version
+      tags:
+      - EquipmentType
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: EquipmentType
+    post:
+      operationId: createEquipmentType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentTypeDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipmentTypeDTO'
+          description: new equipment type resource created
+        "403":
+          description: operation not allowed
+      summary: Create an equipment type
+      tags:
+      - EquipmentType
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: EquipmentType
+    put:
+      operationId: updateEquipmentType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentTypeDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipmentTypeDTO'
+          description: updated EquipmentTypeDTO resource
+        "403":
+          description: operation not allowed
+      summary: Update an equipment type
+      tags:
+      - EquipmentType
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: EquipmentType
+  /administrator/equipments/types/search:
+    post:
+      operationId: searchEquipmentTypes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/EquipmentTypeDTO'
+                type: array
+          description: OK - Equipment types match filter criteria
+          headers:
+            Content-Range:
+              description: Indicates where the partial responded items belongs to
+                e.g. "items 1-20/538"
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: Search equipment types
+      tags:
+      - EquipmentType
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: EquipmentType
+  /administrator/equipments/tools:
+    delete:
+      operationId: deleteTools
+      parameters:
+      - description: UUID requested to be deleted
+        explode: true
+        in: query
+        name: uuid
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: form
+      - description: Version that belongs to the UUIDs
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          $ref: '#/components/schemas/versionType'
+        style: form
+      responses:
+        "204":
+          description: "success, no content"
+        "403":
+          description: operation not allowed
+        "404":
+          description: item not found
+      summary: Delete tool by uuid and version
+      tags:
+      - Tool
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Tool
+    post:
+      operationId: createTool
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolDTO'
+          description: new tool resource created
+        "403":
+          description: operation not allowed
+      summary: Create an tool
+      tags:
+      - Tool
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Tool
+    put:
+      operationId: updateTool
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolDTO'
+          description: updated ToolDTO resource
+        "403":
+          description: operation not allowed
+      summary: Update an tool
+      tags:
+      - Tool
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Tool
+  /administrator/equipments/tools/search:
+    post:
+      operationId: searchTools
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ToolDTO'
+                type: array
+          description: OK - Tools matching filter criteria
+          headers:
+            Content-Range:
+              description: "Indicates where the partial responded items belongs to,\
+                \ e.g. \"items 1-20/538\""
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: Search tools
+      tags:
+      - Tool
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Tool
+  /administrator/materials:
+    delete:
+      operationId: deleteMaterials
+      parameters:
+      - description: UUID requested to be deleted
+        explode: true
+        in: query
+        name: uuid
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: form
+      - description: Version that belongs to the UUIDs
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          $ref: '#/components/schemas/versionType'
+        style: form
+      responses:
+        "204":
+          description: "success, no content"
+        "403":
+          description: operation not allowed
+        "404":
+          description: item not found
+      summary: Delete material by uuid and version
+      tags:
+      - Material
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Material
+    post:
+      operationId: createMaterial
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialDTO'
+          description: new material resource created
+        "403":
+          description: operation not allowed
+      summary: Create a material
+      tags:
+      - Material
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Material
+    put:
+      operationId: updateMaterial
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialDTO'
+          description: updated MaterialDTO resource
+        "403":
+          description: operation not allowed
+      summary: Update an material
+      tags:
+      - Material
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Material
+  /administrator/materials/search:
+    post:
+      operationId: searchMaterials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MaterialDTO'
+                type: array
+          description: OK - Materials matching filter criteria
+          headers:
+            Content-Range:
+              description: "Indicates where the partial responded items belongs to,\
+                \ e.g. \"items 1-20/538\""
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: Search materials
+      tags:
+      - Material
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Material
+  /administrator/processes/steps:
+    delete:
+      operationId: deleteProcessStep
+      parameters:
+      - description: UUID requested to be deleted
+        explode: true
+        in: query
+        name: uuid
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: form
+      - description: Version that belongs to the UUIDs
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          $ref: '#/components/schemas/versionType'
+        style: form
+      responses:
+        "204":
+          description: "success, no content"
+        "403":
+          description: operation not allowed
+        "404":
+          description: item not found
+      summary: Delete process step by uuid and version
+      tags:
+      - ProcessStep
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessStep
+    post:
+      operationId: createProcessStep
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessStepDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStepDTO'
+          description: new ProcessStep resource created
+        "403":
+          description: operation not allowed
+      summary: Create a ProcessStep
+      tags:
+      - ProcessStep
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessStep
+    put:
+      operationId: updateProcessStep
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessStepDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStepDTO'
+          description: updated ProcessStepDTO resource
+        "403":
+          description: operation not allowed
+      summary: Update a ProcessStep
+      tags:
+      - ProcessStep
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessStep
+  /administrator/processes/steps/search:
+    post:
+      operationId: searchProcessSteps
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProcessStepDTO'
+                type: array
+          description: OK - ProcessSteps matching filter criteria
+          headers:
+            Content-Range:
+              description: "Indicates where the partial responded items belongs to,\
+                \ e.g. \"items 1-20/538\""
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: Search ProcessStep
+      tags:
+      - ProcessStep
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessStep
+  /administrator/processes/info:
+    delete:
+      operationId: deleteProcess
+      parameters:
+      - description: UUID requested to be deleted
+        explode: true
+        in: query
+        name: uuid
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: form
+      - description: Version that belongs to the UUIDs
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          $ref: '#/components/schemas/versionType'
+        style: form
+      responses:
+        "204":
+          description: "success, no content"
+        "403":
+          description: operation not allowed
+        "404":
+          description: item not found
+      summary: Delete process by uuid and version
+      tags:
+      - ProcessInfo
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessInfo
+    post:
+      description: "Note: an equipment can't be in two process steps of one process"
+      operationId: createProcess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessDTO'
+          description: new Process resource created
+        "403":
+          description: operation not allowed
+      summary: Create a Process
+      tags:
+      - ProcessInfo
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessInfo
+    put:
+      operationId: updateProcess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessDTO'
+          description: updated ProcessDTO resource
+        "403":
+          description: operation not allowed
+      summary: Update a Process
+      tags:
+      - ProcessInfo
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessInfo
+  /administrator/processes/info/search:
+    post:
+      operationId: searchProcesses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProcessDTO'
+                type: array
+          description: OK - Processes matching filter criteria
+          headers:
+            Content-Range:
+              description: "Indicates where the partial responded items belongs to,\
+                \ e.g. \"items 1-20/538\""
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: Search Processes
+      tags:
+      - ProcessInfo
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: ProcessInfo
+  /administrator/orders:
+    delete:
+      operationId: deleteOrder
+      parameters:
+      - description: UUID requested to be deleted
+        explode: true
+        in: query
+        name: uuid
+        required: true
+        schema:
+          $ref: '#/components/schemas/uuidType'
+        style: form
+      - description: Version that belongs to the UUIDs
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          $ref: '#/components/schemas/versionType'
+        style: form
+      responses:
+        "204":
+          description: "success, no content"
+        "403":
+          description: operation not allowed
+        "404":
+          description: item not found
+      summary: Delete process by uuid and version
+      tags:
+      - Order
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Order
+    post:
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDTO'
+          description: new Order resource created
+        "403":
+          description: operation not allowed
+      summary: Create an order
+      tags:
+      - Order
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Order
+    put:
+      operationId: updateOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDTO'
+          description: updated OrderDTO resource
+        "403":
+          description: operation not allowed
+      summary: Update an Order
+      tags:
+      - Order
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Order
+  /administrator/orders/search:
+    post:
+      operationId: searchOrders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchType'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/OrderDTO'
+                type: array
+          description: OK - Orders matching filter criteria
+          headers:
+            Content-Range:
+              description: "Indicates where the partial responded items belongs to,\
+                \ e.g. \"items 1-20/538\""
+              explode: false
+              schema:
+                type: string
+              style: simple
+      summary: Search Orders
+      tags:
+      - Order
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Order
+components:
+  schemas:
+    nameType:
+      minLength: 1
+      type: string
+    uuidType:
+      maxLength: 36
+      minLength: 1
+      type: string
+    descriptionType:
+      maxLength: 255
+      minLength: 0
+      type: string
+    versionType:
+      readOnly: true
+      type: integer
+    updatedType:
+      description: e.g. 2017-07-21T17:32:28Z
+      format: date-time
+      readOnly: true
+      type: string
+    updatedByType:
+      maxLength: 255
+      readOnly: true
+      type: string
+    equipmentAliasType:
+      minLength: 1
+      type: string
+    equipmentActiveType:
+      type: boolean
+    qtyUnitType:
+      minLength: 1
+      type: string
+    quantityType:
+      minimum: 0
+      type: integer
+    orderInProcessType:
+      maximum: 128
+      minimum: 0
+      type: integer
+    IdentityDTO:
+      example:
+        name: name
+        uuid: uuid
+      properties:
+        uuid:
+          maxLength: 36
+          minLength: 1
+          type: string
+        name:
+          minLength: 1
+          type: string
+      required:
+      - name
+      - uuid
+      type: object
+    AbstractDTO:
+      properties:
+        uuid:
+          maxLength: 36
+          minLength: 1
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          maxLength: 255
+          minLength: 0
+          type: string
+        version:
+          readOnly: true
+          type: integer
+        updated:
+          description: e.g. 2017-07-21T17:32:28Z
+          format: date-time
+          readOnly: true
+          type: string
+        updatedBy:
+          maxLength: 255
+          readOnly: true
+          type: string
+      required:
+      - name
+      type: object
+    EquipmentTypeDTO:
+      allOf:
+      - $ref: '#/components/schemas/AbstractDTO'
+      example:
+        updatedBy: updatedBy
+        name: name
+        description: description
+        uuid: uuid
+        version: 0
+        updated: 2000-01-23T04:56:07.000+00:00
+    ToolDTO:
+      allOf:
+      - $ref: '#/components/schemas/AbstractDTO'
+      - properties:
+          equipmentTypeIdentity:
+            $ref: '#/components/schemas/IdentityDTO'
+          alias:
+            $ref: '#/components/schemas/equipmentAliasType'
+          active:
+            type: boolean
+        required:
+        - active
+        - equipmentTypeIdentity
+        type: object
+      example:
+        updatedBy: updatedBy
+        name: name
+        description: description
+        alias: null
+        active: true
+        equipmentTypeIdentity:
+          name: name
+          uuid: uuid
+        uuid: uuid
+        version: 0
+        updated: 2000-01-23T04:56:07.000+00:00
+    MaterialDTO:
+      allOf:
+      - $ref: '#/components/schemas/AbstractDTO'
+      - properties:
+          availableQuantity:
+            $ref: '#/components/schemas/quantityType'
+          quantityUnit:
+            $ref: '#/components/schemas/qtyUnitType'
+        required:
+        - availableQuantity
+        - quantityUnit
+        type: object
+      example:
+        availableQuantity: null
+        updatedBy: updatedBy
+        name: name
+        description: description
+        quantityUnit: null
+        uuid: uuid
+        version: 0
+        updated: 2000-01-23T04:56:07.000+00:00
+    ProcessStepMaterialDTO:
+      allOf:
+      - $ref: '#/components/schemas/IdentityDTO'
+      - properties:
+          quantity:
+            $ref: '#/components/schemas/quantityType'
+        required:
+        - quantity
+        type: object
+      example:
+        quantity: null
+        name: name
+        uuid: uuid
+    ProcessStepDTO:
+      allOf:
+      - $ref: '#/components/schemas/AbstractDTO'
+      - properties:
+          inputMaterials:
+            items:
+              $ref: '#/components/schemas/ProcessStepMaterialDTO'
+            minItems: 1
+            type: array
+            uniqueItems: true
+          equipments:
+            items:
+              $ref: '#/components/schemas/IdentityDTO'
+            minItems: 1
+            type: array
+            uniqueItems: true
+          successOutputMaterials:
+            items:
+              $ref: '#/components/schemas/ProcessStepMaterialDTO'
+            minItems: 1
+            type: array
+            uniqueItems: true
+          failOutputMaterials:
+            items:
+              $ref: '#/components/schemas/ProcessStepMaterialDTO'
+            minItems: 0
+            type: array
+            uniqueItems: true
+        required:
+        - equipments
+        - inputMaterials
+        - successOutputMaterials
+        type: object
+      example:
+        equipments:
+        - name: name
+          uuid: uuid
+        - name: name
+          uuid: uuid
+        successOutputMaterials:
+        - quantity: null
+          name: name
+          uuid: uuid
+        - quantity: null
+          name: name
+          uuid: uuid
+        updatedBy: updatedBy
+        inputMaterials:
+        - quantity: null
+          name: name
+          uuid: uuid
+        - quantity: null
+          name: name
+          uuid: uuid
+        name: name
+        description: description
+        failOutputMaterials:
+        - quantity: null
+          name: name
+          uuid: uuid
+        - quantity: null
+          name: name
+          uuid: uuid
+        uuid: uuid
+        version: 0
+        updated: 2000-01-23T04:56:07.000+00:00
+    OrderedProcessStepDTO:
+      allOf:
+      - $ref: '#/components/schemas/IdentityDTO'
+      - properties:
+          orderInProcess:
+            $ref: '#/components/schemas/orderInProcessType'
+        required:
+        - orderInProcess
+        type: object
+      example:
+        name: name
+        uuid: uuid
+        orderInProcess: null
+    ProcessDTO:
+      allOf:
+      - $ref: '#/components/schemas/AbstractDTO'
+      - properties:
+          orderedProcessSteps:
+            items:
+              $ref: '#/components/schemas/OrderedProcessStepDTO'
+            minItems: 1
+            type: array
+            uniqueItems: true
+        required:
+        - orderedProcessSteps
+        type: object
+      example:
+        orderedProcessSteps:
+        - name: name
+          uuid: uuid
+          orderInProcess: null
+        - name: name
+          uuid: uuid
+          orderInProcess: null
+        updatedBy: updatedBy
+        name: name
+        description: description
+        uuid: uuid
+        version: 0
+        updated: 2000-01-23T04:56:07.000+00:00
+    OrderDTO:
+      allOf:
+      - $ref: '#/components/schemas/AbstractDTO'
+      - properties:
+          process:
+            $ref: '#/components/schemas/IdentityDTO'
+          quantity:
+            $ref: '#/components/schemas/quantityType'
+          completeQty:
+            $ref: '#/components/schemas/quantityType'
+        required:
+        - process
+        - quantity
+        type: object
+      example:
+        completeQty: null
+        process:
+          name: name
+          uuid: uuid
+        updatedBy: updatedBy
+        quantity: null
+        name: name
+        description: description
+        uuid: uuid
+        version: 0
+        updated: 2000-01-23T04:56:07.000+00:00
+    FilterParamType:
+      example:
+        outerOperator: and
+        criteria:
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        criteriaGroups:
+        - outerOperator: and
+          criteria:
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          criteriaGroups:
+          - null
+          - null
+        - outerOperator: and
+          criteria:
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          criteriaGroups:
+          - null
+          - null
+      properties:
+        outerOperator:
+          default: and
+          enum:
+          - and
+          - or
+          type: string
+        criteriaGroups:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaGroupType'
+          type: array
+        criteria:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaType'
+          type: array
+      type: object
+    FilterParamCriteriaGroupType:
+      example:
+        outerOperator: and
+        criteria:
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        - propertyName: propertyName
+          values:
+          - values
+          - values
+          operator: eq
+        criteriaGroups:
+        - null
+        - null
+      properties:
+        outerOperator:
+          default: and
+          enum:
+          - and
+          - or
+          type: string
+        criteria:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaType'
+          type: array
+        criteriaGroups:
+          items:
+            $ref: '#/components/schemas/FilterParamCriteriaGroupType'
+          type: array
+      required:
+      - criteria
+      type: object
+    FilterParamCriteriaType:
+      example:
+        propertyName: propertyName
+        values:
+        - values
+        - values
+        operator: eq
+      properties:
+        propertyName:
+          type: string
+        operator:
+          enum:
+          - eq
+          - ne
+          - like
+          - not_like
+          - lt
+          - le
+          - gt
+          - ge
+          - is_null
+          - is_not_null
+          - in
+          - not_in
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+      required:
+      - operator
+      - propertyName
+      type: object
+    SortByType:
+      description: "Comma separated list with property names to sort, e.g. \"sort-by=asc:name,desc:updated\"\
+        ."
+      type: string
+    PagingOffsetType:
+      default: 0
+      description: Number of items to skip before returning the results.
+      format: int32
+      minimum: 0
+      type: integer
+    PagingLimitType:
+      default: 1000000
+      description: Maximum number of items to return. Limit value 0 will disable paging
+        and all items are returned.
+      format: int32
+      minimum: 0
+      type: integer
+    SearchType:
+      example:
+        filter:
+          outerOperator: and
+          criteria:
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          - propertyName: propertyName
+            values:
+            - values
+            - values
+            operator: eq
+          criteriaGroups:
+          - outerOperator: and
+            criteria:
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            criteriaGroups:
+            - null
+            - null
+          - outerOperator: and
+            criteria:
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            - propertyName: propertyName
+              values:
+              - values
+              - values
+              operator: eq
+            criteriaGroups:
+            - null
+            - null
+        offset: 0
+        limit: 0
+        sortBy: sortBy
+      properties:
+        sortBy:
+          description: "Comma separated list with property names to sort, e.g. \"\
+            sort-by=asc:name,desc:updated\"."
+          type: string
+        offset:
+          default: 0
+          description: Number of items to skip before returning the results.
+          format: int32
+          minimum: 0
+          type: integer
+        limit:
+          default: 1000000
+          description: Maximum number of items to return. Limit value 0 will disable
+            paging and all items are returned.
+          format: int32
+          minimum: 0
+          type: integer
+        filter:
+          $ref: '#/components/schemas/FilterParamType'
+      type: object
