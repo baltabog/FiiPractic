@@ -233,7 +233,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/../resources/workInProgressOpenAPI.yaml</inputSpec>
-                            <templateDirectory>../resources/templates/client</templateDirectory>
+<!--                            <templateDirectory>../resources/templates/client</templateDirectory>-->
                             <generatorName>java</generatorName>
                             <generateApis>true</generateApis>
                             <generateModels>true</generateModels>
