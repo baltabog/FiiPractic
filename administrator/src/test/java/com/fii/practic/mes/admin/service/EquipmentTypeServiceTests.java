@@ -1,4 +1,4 @@
-package com.fii.practic.mes.admin.general.service.equipment;
+package com.fii.practic.mes.admin.service;
 
 import com.fii.practic.mes.admin.equipment.type.EquipmentTypeEntity;
 import com.fii.practic.mes.admin.equipment.type.EquipmentTypeRepository;
@@ -10,17 +10,13 @@ import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.http.HttpServerResponse;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
-import java.net.http.HttpHeaders;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

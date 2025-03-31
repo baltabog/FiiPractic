@@ -1,8 +1,7 @@
-package com.fii.practic.mes.admin.general.api.equipment;
+package com.fii.practic.mes.admin.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fii.practic.mes.admin.equipment.type.EquipmentTypeEntity;
 import com.fii.practic.mes.admin.equipment.type.EquipmentTypeService;
 import com.fii.practic.mes.admin.general.error.ApplicationRuntimeException;
 import com.fii.practic.mes.admin.general.error.ServerErrorEnum;
@@ -13,20 +12,15 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseOptions;
-import io.restassured.specification.RequestSpecification;
 import jakarta.inject.Inject;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
