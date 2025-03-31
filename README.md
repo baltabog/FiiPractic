@@ -23,8 +23,6 @@ The project contains three modules that will allow you to understand how / when 
 Using this module, we can add all equipment/materials/process steps and orders from one manufatoring plant. 
 ### WorkInProgress module
 This module will let us manage what happens (regarding orders and equipment) in one plant (described using Administrator module) in real time.
-### Simulator
-TODO: add description
 
 ## Roadmap
 [ ] describe modules<br />
