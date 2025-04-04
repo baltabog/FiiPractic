@@ -83,6 +83,7 @@ public class ToolService extends AbstractCRUDService<ToolDTO, ToolEntity> {
         return true;
     }
 
+    @Override
     protected ToolEntity updateEntityWithDto(ToolDTO dto, UpdateArtificialDto updateArtificialDto) {
         ToolEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
 

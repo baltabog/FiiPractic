@@ -1,8 +1,13 @@
 package com.fii.practic.mes.admin.process.step;
 
+import com.fii.practic.mes.admin.equipment.tool.ToolEntity;
 import com.fii.practic.mes.admin.general.AbstractEntity;
+import com.fii.practic.mes.admin.process.plan.ProcessPlanStepEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -11,7 +16,9 @@ import lombok.Setter;
 import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = ProcessStepEntity.ENTITY_NAME)
 @Table(
@@ -33,4 +40,15 @@ public class ProcessStepEntity extends AbstractEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
     private List<ProcessStepMaterialFailEntity> failOutputMaterials = new ArrayList<>();
+
+    @OneToMany(mappedBy = "processStep")
+    private List<ProcessPlanStepEntity> processPlanSteps = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "T_PROCESS_STEP_EQUIPMENT",
+            joinColumns = { @JoinColumn(name = "PROCESS_STEP_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "EQUIPMENT_ID") }
+    )
+    private Set<ToolEntity> equipments = new HashSet<>();
 }

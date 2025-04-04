@@ -30,7 +30,7 @@ public class ToolEntity extends AbstractEntity {
     public static final String TABLE_NAME = "T_EQUIPMENT";
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EQ_TYPE", nullable = false, updatable = false)
+    @JoinColumn(name = "EQ_TYPE_ID", nullable = false, updatable = false)
     private EquipmentTypeEntity equipmentType;
 
     @Column(name = "ALIAS")

@@ -1,21 +1,22 @@
-package com.fii.practic.mes.admin.equipment.tool;
+package com.fii.practic.mes.admin.process.step;
 
 import com.fii.practic.mes.admin.general.mapper.AbstractEntityMapper;
-import com.fii.practic.mes.models.ToolDTO;
+import com.fii.practic.mes.models.ProcessStepDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "jakarta",
-        uses = {AbstractEntityMapper.class})
-public interface ToolMapper {
-    @Mapping(target = "equipmentTypeIdentity", source = "equipmentType")
-    ToolDTO mapToDto(ToolEntity entity);
+    uses = {AbstractEntityMapper.class})
+public interface ProcessStepMapper {
+
+    ProcessStepDTO mapToDto(ProcessStepEntity entity);
 
     @Mapping(target = "version",            ignore = true)
     @Mapping(target = "updated",	        ignore = true)
     @Mapping(target = "updatedBy",	        ignore = true)
-    ToolEntity mapToEntity(ToolDTO dto);
+    @Mapping(target = "equipments",         ignore = true)
+    ProcessStepEntity mapToEntity(ProcessStepDTO dto);
 
     @Mapping(target = "id",                 ignore = true)
     @Mapping(target = "uuid",               ignore = true)
@@ -23,5 +24,5 @@ public interface ToolMapper {
     @Mapping(target = "version",            ignore = true)
     @Mapping(target = "updated",	        ignore = true)
     @Mapping(target = "updatedBy",	        ignore = true)
-    ToolEntity updateEntityWithDtoInfo(@MappingTarget ToolEntity entity, ToolDTO dto);
+    ProcessStepEntity updateEntityWithDtoInfo(@MappingTarget ProcessStepEntity entity, ProcessStepDTO dto);
 }
