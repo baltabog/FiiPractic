@@ -5,6 +5,7 @@ import com.fii.practic.mes.admin.equipment.tool.ToolService;
 import com.fii.practic.mes.admin.general.AbstractCRUDService;
 import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
+import com.fii.practic.mes.admin.general.dto.UpdateArtificialDto;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.ProcessStepDTO;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -100,6 +101,7 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
                     outputMaterial.setUuid(UUID.randomUUID().toString());
                 });
         entity.getEquipments().addAll(getEquipmentEntities(dto.getEquipments()));
+
         return entity;
     }
 
@@ -113,5 +115,11 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
                 .forEach(equipmentEntities::add);
 
         return equipmentEntities;
+    }
+
+    @Override
+    protected ProcessStepEntity updateEntityWithDto(ProcessStepDTO dto, UpdateArtificialDto updateArtificialDto) {
+        ProcessStepEntity processStepEntity = super.updateEntityWithDto(dto, updateArtificialDto);
+        return processStepEntity;
     }
 }

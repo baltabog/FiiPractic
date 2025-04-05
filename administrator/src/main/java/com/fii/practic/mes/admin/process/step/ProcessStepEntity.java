@@ -36,6 +36,9 @@ public class ProcessStepEntity extends AbstractEntity {
     public static final String PROCESS_STEP_MATERIAL_JOIN_COLUMN = "PROCESS_STEP_ID";
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
+    private List<ProcessStepInputMaterialEntity> processStepInputMaterial = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
     private List<ProcessStepMaterialSuccessEntity> successOutputMaterials = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
