@@ -11,20 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
 @Entity(name = ProcessPlanStepEntity.ENTITY_NAME)
-@Table(
-        name = ProcessPlanStepEntity.TABLE_NAME,
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"UUID"}, name = ProcessPlanStepEntity.TABLE_NAME + "__UUID"),
-                @UniqueConstraint(columnNames = {"NAME"}, name = ProcessPlanStepEntity.TABLE_NAME + "__NAME")
-        }
-)
+@Table(name = ProcessPlanStepEntity.TABLE_NAME)
 @Audited
 @Getter
 @Setter
@@ -50,7 +43,7 @@ public class ProcessPlanStepEntity {
         @NotNull
         private ProcessStepEntity processStep;
 
-        @Column(name = "ORDER", nullable = false)
+        @Column(name = "ORDER_IN_PLAN", nullable = false)
         @NotNull
         private Integer orderInProcess;
 }
