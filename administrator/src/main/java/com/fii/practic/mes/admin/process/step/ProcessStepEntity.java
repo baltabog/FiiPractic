@@ -2,7 +2,6 @@ package com.fii.practic.mes.admin.process.step;
 
 import com.fii.practic.mes.admin.equipment.tool.ToolEntity;
 import com.fii.practic.mes.admin.general.AbstractEntity;
-import com.fii.practic.mes.admin.process.plan.ProcessPlanStepEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -43,9 +42,6 @@ public class ProcessStepEntity extends AbstractEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
     private List<ProcessStepMaterialFailEntity> failOutputMaterials = new ArrayList<>();
-
-    @OneToMany(mappedBy = "processStep")
-    private List<ProcessPlanStepEntity> processPlanSteps = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(

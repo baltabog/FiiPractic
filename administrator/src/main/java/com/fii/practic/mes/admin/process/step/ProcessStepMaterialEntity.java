@@ -1,5 +1,6 @@
 package com.fii.practic.mes.admin.process.step;
 
+import com.fii.practic.mes.admin.material.MaterialEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -14,11 +15,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
 @Entity(name = ProcessStepMaterialEntity.ENTITY_NAME)
@@ -42,21 +41,19 @@ public class ProcessStepMaterialEntity {
     @SequenceGenerator(name = "entity_id_generator", sequenceName = "T_SEQUENCE__ID", allocationSize = 1)
     private Long id;
 
-    @Column(name = "UUID", nullable = false, updatable = false, length = 36)
-    @NotEmpty
-    @NaturalId
-    private String uuid;
-
-    @Column(name = "NAME", nullable = false)
-    @NotEmpty
-    private String name;
-
-    @Column(name = "QUANTITY")
-    private Integer quantity;
-
     @ManyToOne
     @JoinColumn(name = "PROCESS_STEP_ID", referencedColumnName = "ID", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_T_PROCESS_STEP_MATERIAL__PROCESS_STEP_ID"))
     @NotNull
     private ProcessStepEntity processStep;
+
+    @ManyToOne
+    @JoinColumn(name = "MATERIAL_ID", referencedColumnName = "ID", nullable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "FK_T_PROCESS_STEP_MATERIAL__MATERIAL_ID"))
+    @NotNull
+    private MaterialEntity material;
+
+    @Column(name = "QUANTITY")
+    private Integer quantity;
+
 }

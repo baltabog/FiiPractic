@@ -14,5 +14,5 @@ import org.hibernate.envers.Audited;
 @AuditTable(value = "T_PROCESS_STEP_MATERIAL_FAIL_AUD")
 public class ProcessStepMaterialFailEntity extends ProcessStepMaterialEntity {
     public static final String ENTITY_NAME = "ProcessStepMaterialFail";
-    public static final String DISCRIMINATOR = "F";
+    public static final String DISCRIMINATOR = "OUT_FAIL";
 }
