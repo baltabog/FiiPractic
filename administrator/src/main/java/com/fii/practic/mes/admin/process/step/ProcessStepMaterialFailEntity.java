@@ -4,14 +4,12 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 
 @Entity(name = ProcessStepMaterialFailEntity.ENTITY_NAME)
 @DiscriminatorValue(value = ProcessStepMaterialFailEntity.DISCRIMINATOR)
 @Getter @Setter
 @Audited
-@AuditTable(value = "T_PROCESS_STEP_MATERIAL_FAIL_AUD")
 public class ProcessStepMaterialFailEntity extends ProcessStepMaterialEntity {
     public static final String ENTITY_NAME = "ProcessStepMaterialFail";
     public static final String DISCRIMINATOR = "OUT_FAIL";

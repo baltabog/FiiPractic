@@ -97,6 +97,8 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
         ProcessStepEntity entity = super.createEntityFromDto(dto, createArtificialDto);
 
         entity.getProcessStepInputMaterial().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepInputMaterialEntity.class));
+        entity.getSuccessOutputMaterials().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepMaterialSuccessEntity.class));
+        entity.getFailOutputMaterials().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepMaterialFailEntity.class));
         entity.getEquipments().addAll(getEquipmentEntities(dto.getEquipments()));
 
         return entity;
