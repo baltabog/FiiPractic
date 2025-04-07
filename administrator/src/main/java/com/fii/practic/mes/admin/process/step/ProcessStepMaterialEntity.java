@@ -18,6 +18,7 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
 @Entity(name = ProcessStepMaterialEntity.ENTITY_NAME)
@@ -45,12 +46,14 @@ public class ProcessStepMaterialEntity {
     @JoinColumn(name = "PROCESS_STEP_ID", referencedColumnName = "ID", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_T_PROCESS_STEP_MATERIAL__PROCESS_STEP_ID"))
     @NotNull
+    @NaturalId
     private ProcessStepEntity processStep;
 
     @ManyToOne
     @JoinColumn(name = "MATERIAL_ID", referencedColumnName = "ID", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_T_PROCESS_STEP_MATERIAL__MATERIAL_ID"))
     @NotNull
+    @NaturalId
     private MaterialEntity material;
 
     @Column(name = "QUANTITY")

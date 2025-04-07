@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
 @Entity(name = ProcessPlanStepEntity.ENTITY_NAME)
@@ -35,12 +36,14 @@ public class ProcessPlanStepEntity {
         @JoinColumn(name = "PROCESS_PLAN_ID", nullable = false, updatable = false,
                 foreignKey = @ForeignKey(name = "FK_T_PROCESS_PLAN_STEP__PROCESS_PLAN_ID"))
         @NotNull
+        @NaturalId
         private ProcessPlanEntity processPlan;
 
         @ManyToOne
         @JoinColumn(name = "PROCESS_STEP_ID", nullable = false, updatable = false,
                 foreignKey = @ForeignKey(name = "FK_T_PROCESS_PLAN_STEP__PROCESS_STEP_ID"))
         @NotNull
+        @NaturalId
         private ProcessStepEntity processStep;
 
         @Column(name = "ORDER_IN_PLAN", nullable = false)

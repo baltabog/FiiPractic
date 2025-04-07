@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
@@ -35,12 +37,15 @@ public class ProcessStepEntity extends AbstractEntity {
     public static final String PROCESS_STEP_MATERIAL_JOIN_COLUMN = "PROCESS_STEP_ID";
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProcessStepInputMaterialEntity> processStepInputMaterial = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProcessStepMaterialSuccessEntity> successOutputMaterials = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processStep")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProcessStepMaterialFailEntity> failOutputMaterials = new ArrayList<>();
 
     @ManyToMany

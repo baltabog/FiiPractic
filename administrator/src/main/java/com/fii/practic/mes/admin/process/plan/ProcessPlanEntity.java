@@ -8,6 +8,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class ProcessPlanEntity extends AbstractEntity {
         public static final String TABLE_NAME = "T_PROCESS_PLAN";
 
         @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processPlan")
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private List<ProcessPlanStepEntity> orderedProcessSteps = new ArrayList<>();
 
 }
