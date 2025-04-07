@@ -2,7 +2,7 @@ package com.fii.practic.mes.admin.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fii.practic.mes.admin.equipment.type.EquipmentTypeService;
+import com.fii.practic.mes.admin.domanin.equipment.type.EquipmentTypeService;
 import com.fii.practic.mes.admin.general.error.ApplicationRuntimeException;
 import com.fii.practic.mes.admin.general.error.ServerErrorEnum;
 import com.fii.practic.mes.models.EquipmentTypeDTO;
