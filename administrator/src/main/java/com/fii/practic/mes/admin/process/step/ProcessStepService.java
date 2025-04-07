@@ -6,29 +6,35 @@ import com.fii.practic.mes.admin.general.AbstractCRUDService;
 import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
 import com.fii.practic.mes.admin.general.dto.UpdateArtificialDto;
+import com.fii.practic.mes.admin.material.MaterialEntity;
+import com.fii.practic.mes.admin.material.MaterialService;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.ProcessStepDTO;
+import com.fii.practic.mes.models.ProcessStepMaterialDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @ApplicationScoped
 public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, ProcessStepEntity> {
     private final ProcessStepMapper mapper;
     private final ProcessStepRepository repository;
     private final ToolService toolService;
+    private final MaterialService materialService;
 
     @Inject
-    public ProcessStepService(ProcessStepMapper mapper, ProcessStepRepository repository, ToolService toolService) {
+    public ProcessStepService(ProcessStepMapper mapper, ProcessStepRepository repository, ToolService toolService, MaterialService materialService) {
         this.mapper = mapper;
         this.repository = repository;
         this.toolService = toolService;
+        this.materialService = materialService;
     }
 
     @Override
@@ -90,19 +96,31 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
     protected ProcessStepEntity createEntityFromDto(ProcessStepDTO dto, CreateArtificialDto createArtificialDto) {
         ProcessStepEntity entity = super.createEntityFromDto(dto, createArtificialDto);
 
-        entity.getSuccessOutputMaterials()
-                .forEach(outputMaterial -> {
-                    outputMaterial.setProcessStep(entity);
-                    outputMaterial.setUuid(UUID.randomUUID().toString());
-                });
-        entity.getFailOutputMaterials()
-                .forEach(outputMaterial -> {
-                    outputMaterial.setProcessStep(entity);
-                    outputMaterial.setUuid(UUID.randomUUID().toString());
-                });
+        entity.getProcessStepInputMaterial().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepInputMaterialEntity.class));
         entity.getEquipments().addAll(getEquipmentEntities(dto.getEquipments()));
 
         return entity;
+    }
+
+    private <E extends ProcessStepMaterialEntity> List<E> getStepMaterials(ProcessStepEntity processStepEntity,
+                                                                           Set<ProcessStepMaterialDTO> materialReferences, Class<E> entityType) {
+        if (CollectionUtils.isEmpty(materialReferences)) {
+            return Collections.emptyList();
+        }
+        List<E> processStepMaterialEntities = new ArrayList<>();
+        for (ProcessStepMaterialDTO materialReference : materialReferences) {
+            MaterialEntity materialEntity = materialService.getByIdentity(new IdentityDTO()
+                    .uuid(materialReference.getUuid())
+                    .name(materialReference.getName()));
+            ProcessStepMaterialEntity processStepMaterialEntity = new ProcessStepMaterialEntity();
+            processStepMaterialEntity.setProcessStep(processStepEntity);
+            processStepMaterialEntity.setMaterial(materialEntity);
+            processStepMaterialEntity.setQuantity(materialReference.getQuantity());
+
+            processStepMaterialEntities.add(entityType.cast(processStepMaterialEntity));
+        }
+        return processStepMaterialEntities;
+
     }
 
     private Collection<? extends ToolEntity> getEquipmentEntities(Set<IdentityDTO> equipmentReferences) {
