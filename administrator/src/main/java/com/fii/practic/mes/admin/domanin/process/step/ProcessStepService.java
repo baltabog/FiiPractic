@@ -2,12 +2,12 @@ package com.fii.practic.mes.admin.domanin.process.step;
 
 import com.fii.practic.mes.admin.domanin.equipment.tool.ToolEntity;
 import com.fii.practic.mes.admin.domanin.equipment.tool.ToolService;
+import com.fii.practic.mes.admin.domanin.material.MaterialEntity;
+import com.fii.practic.mes.admin.domanin.material.MaterialService;
 import com.fii.practic.mes.admin.general.AbstractCRUDService;
 import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
 import com.fii.practic.mes.admin.general.dto.UpdateArtificialDto;
-import com.fii.practic.mes.admin.domanin.material.MaterialEntity;
-import com.fii.practic.mes.admin.domanin.material.MaterialService;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.ProcessStepDTO;
 import com.fii.practic.mes.models.ProcessStepMaterialDTO;
@@ -139,7 +139,90 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
 
     @Override
     protected ProcessStepEntity updateEntityWithDto(ProcessStepDTO dto, UpdateArtificialDto updateArtificialDto) {
-        ProcessStepEntity processStepEntity = super.updateEntityWithDto(dto, updateArtificialDto);
-        return processStepEntity;
+        ProcessStepEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
+
+        updateEquipments(entity, dto);
+        updateInputMaterials(entity, dto);
+        updateSuccessOutputMaterials(entity, dto);
+        updateFailOutputMaterials(entity, dto);
+
+        return entity;
+    }
+
+    private void updateEquipments(ProcessStepEntity entity, ProcessStepDTO dto) {
+        entity.getEquipments().removeIf(equipment -> equipmentNotFoundInDtoRefs(equipment, dto));
+
+        for (IdentityDTO equipmentReference : dto.getEquipments()) {
+            boolean refNotFound = entity.getEquipments().stream()
+                    .noneMatch(equipment -> equipment.getUuid().equals(equipmentReference.getUuid()));
+            if (refNotFound) {
+                entity.getEquipments().add(
+                        toolService.getByIdentity(equipmentReference));
+            }
+        }
+    }
+
+    private static boolean equipmentNotFoundInDtoRefs(ToolEntity equipment, ProcessStepDTO dto) {
+        return dto.getEquipments().stream().map(IdentityDTO::getUuid)
+                .noneMatch(uuid -> equipment.getUuid().equals(uuid));
+    }
+
+    private void updateInputMaterials(ProcessStepEntity entity, ProcessStepDTO dto) {
+        List<ProcessStepInputMaterialEntity> inputMaterialEntities = new ArrayList<>(dto.getInputMaterials().size());
+        for (ProcessStepMaterialDTO inputMaterialDto : dto.getInputMaterials()) {
+            ProcessStepInputMaterialEntity processStepInputMaterialEntity = entity.getProcessStepInputMaterial().stream()
+                    .filter(processStepInputMaterial -> processStepInputMaterial.getMaterial().getUuid().equals(inputMaterialDto.getUuid()))
+                    .findFirst()
+                    .orElseGet((() -> getNewProcessStepMaterial(entity, inputMaterialDto, ProcessStepInputMaterialEntity.class)));
+            processStepInputMaterialEntity.setQuantity(inputMaterialDto.getQuantity());
+            inputMaterialEntities.add(processStepInputMaterialEntity);
+        }
+        entity.getProcessStepInputMaterial().clear();
+        entity.getProcessStepInputMaterial().addAll(inputMaterialEntities);
+    }
+
+    private void updateSuccessOutputMaterials(ProcessStepEntity entity, ProcessStepDTO dto) {
+        List<ProcessStepMaterialSuccessEntity> materialSuccessEntities = new ArrayList<>(dto.getSuccessOutputMaterials().size());
+
+        for (ProcessStepMaterialDTO successOutputMaterialDto : dto.getSuccessOutputMaterials()) {
+            ProcessStepMaterialSuccessEntity processStepMaterialSuccessEntity = entity.getSuccessOutputMaterials().stream()
+                    .filter(successMaterial -> successMaterial.getMaterial().getUuid().equals(successOutputMaterialDto.getUuid()))
+                    .findFirst()
+                    .orElseGet(() -> getNewProcessStepMaterial(entity, successOutputMaterialDto, ProcessStepMaterialSuccessEntity.class));
+            processStepMaterialSuccessEntity.setQuantity(successOutputMaterialDto.getQuantity());
+            materialSuccessEntities.add(processStepMaterialSuccessEntity);
+        }
+
+        entity.getSuccessOutputMaterials().clear();
+        entity.getSuccessOutputMaterials().addAll(materialSuccessEntities);
+    }
+    private void updateFailOutputMaterials(ProcessStepEntity entity, ProcessStepDTO dto) {
+        List<ProcessStepMaterialFailEntity> materialFailEntities = new ArrayList<>(dto.getFailOutputMaterials().size());
+
+        for (ProcessStepMaterialDTO failOutputMaterialDto : dto.getFailOutputMaterials()) {
+            ProcessStepMaterialFailEntity processStepMaterialFailEntity = entity.getFailOutputMaterials().stream()
+                    .filter(failMaterial -> failMaterial.getMaterial().getUuid().equals(failOutputMaterialDto.getUuid()))
+                    .findFirst()
+                    .orElseGet(() -> getNewProcessStepMaterial(entity, failOutputMaterialDto, ProcessStepMaterialFailEntity.class));
+            processStepMaterialFailEntity.setQuantity(failOutputMaterialDto.getQuantity());
+            materialFailEntities.add(processStepMaterialFailEntity);
+        }
+
+        entity.getFailOutputMaterials().clear();
+        entity.getFailOutputMaterials().addAll(materialFailEntities);
+    }
+
+    private <E extends  ProcessStepMaterialEntity> E getNewProcessStepMaterial(ProcessStepEntity entity,
+                                                                               ProcessStepMaterialDTO processStepMaterialDTO,
+                                                                               Class<E> materialEntityType) {
+        ProcessStepMaterialEntity processStepMaterialEntity = new ProcessStepMaterialEntity();
+        processStepMaterialEntity.setProcessStep(entity);
+        processStepMaterialEntity.setMaterial(
+                materialService.getByIdentity(new IdentityDTO()
+                        .name(processStepMaterialDTO.getName())
+                        .uuid(processStepMaterialDTO.getUuid()))
+        );
+        processStepMaterialEntity.setQuantity(processStepMaterialDTO.getQuantity());
+        return materialEntityType.cast(processStepMaterialEntity);
     }
 }
