@@ -1,8 +1,8 @@
 package com.fii.practic.mes.admin.service;
 
-import com.fii.practic.mes.admin.equipment.type.EquipmentTypeEntity;
-import com.fii.practic.mes.admin.equipment.type.EquipmentTypeRepository;
-import com.fii.practic.mes.admin.equipment.type.EquipmentTypeService;
+import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeEntity;
+import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeRepository;
+import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeService;
 import com.fii.practic.mes.models.EquipmentTypeDTO;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.SearchType;

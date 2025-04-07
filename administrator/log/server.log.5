@@ -1,0 +1,96 @@
+2025-04-07 11:54:19.333 Timer-0                        (IsolatedDevModeMain.java      :restartApp               :214 )	ERROR 	Failed to start quarkus [Error Occurred After Shutdown]: java.lang.RuntimeException: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
+	[error]: Build step io.quarkus.arc.deployment.ArcProcessor#validate threw an exception: jakarta.enterprise.inject.spi.DeploymentException: jakarta.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type com.fii.practic.mes.admin.process.step.ProcessStepService and qualifiers [@Default]
+	- injection target: parameter 'processStepService' of com.fii.practic.mes.admin.process.plan.ProcessPlanService constructor
+	- declared on CLASS bean [types=[com.fii.practic.mes.admin.general.AbstractCRUDService<com.fii.practic.mes.models.ProcessPlanDTO, com.fii.practic.mes.admin.process.plan.ProcessPlanEntity>, com.fii.practic.mes.admin.process.plan.ProcessPlanService, java.lang.Object], qualifiers=[@Default, @Any], target=com.fii.practic.mes.admin.process.plan.ProcessPlanService]
+	at io.quarkus.arc.processor.BeanDeployment.processErrors(BeanDeployment.java:1576)
+	at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:338)
+	at io.quarkus.arc.processor.BeanProcessor.initialize(BeanProcessor.java:178)
+	at io.quarkus.arc.deployment.ArcProcessor.validate(ArcProcessor.java:489)
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:732)
+	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:856)
+	at io.quarkus.builder.BuildContext.run(BuildContext.java:255)
+	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2675)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2654)
+	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1627)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1594)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:499)
+Caused by: jakarta.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type com.fii.practic.mes.admin.process.step.ProcessStepService and qualifiers [@Default]
+	- injection target: parameter 'processStepService' of com.fii.practic.mes.admin.process.plan.ProcessPlanService constructor
+	- declared on CLASS bean [types=[com.fii.practic.mes.admin.general.AbstractCRUDService<com.fii.practic.mes.models.ProcessPlanDTO, com.fii.practic.mes.admin.process.plan.ProcessPlanEntity>, com.fii.practic.mes.admin.process.plan.ProcessPlanService, java.lang.Object], qualifiers=[@Default, @Any], target=com.fii.practic.mes.admin.process.plan.ProcessPlanService]
+	at io.quarkus.arc.processor.Beans.resolveInjectionPoint(Beans.java:547)
+	at io.quarkus.arc.processor.BeanInfo.init(BeanInfo.java:689)
+	at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:323)
+	... 12 more
+
+	at io.quarkus.runner.bootstrap.AugmentActionImpl.runAugment(AugmentActionImpl.java:372)
+	at io.quarkus.runner.bootstrap.AugmentActionImpl.reloadExistingApplication(AugmentActionImpl.java:303)
+	at io.quarkus.runner.bootstrap.AugmentActionImpl.reloadExistingApplication(AugmentActionImpl.java:61)
+	at io.quarkus.deployment.dev.IsolatedDevModeMain.restartApp(IsolatedDevModeMain.java:200)
+	at io.quarkus.deployment.dev.IsolatedDevModeMain.restartCallback(IsolatedDevModeMain.java:183)
+	at io.quarkus.deployment.dev.RuntimeUpdatesProcessor.doScan(RuntimeUpdatesProcessor.java:555)
+	at io.quarkus.deployment.dev.RuntimeUpdatesProcessor.doScan(RuntimeUpdatesProcessor.java:455)
+	at org.apache.camel.quarkus.core.devmode.CamelHotReplacementSetup$1.run(CamelHotReplacementSetup.java:36)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Caused by: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
+	[error]: Build step io.quarkus.arc.deployment.ArcProcessor#validate threw an exception: jakarta.enterprise.inject.spi.DeploymentException: jakarta.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type com.fii.practic.mes.admin.process.step.ProcessStepService and qualifiers [@Default]
+	- injection target: parameter 'processStepService' of com.fii.practic.mes.admin.process.plan.ProcessPlanService constructor
+	- declared on CLASS bean [types=[com.fii.practic.mes.admin.general.AbstractCRUDService<com.fii.practic.mes.models.ProcessPlanDTO, com.fii.practic.mes.admin.process.plan.ProcessPlanEntity>, com.fii.practic.mes.admin.process.plan.ProcessPlanService, java.lang.Object], qualifiers=[@Default, @Any], target=com.fii.practic.mes.admin.process.plan.ProcessPlanService]
+	at io.quarkus.arc.processor.BeanDeployment.processErrors(BeanDeployment.java:1576)
+	at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:338)
+	at io.quarkus.arc.processor.BeanProcessor.initialize(BeanProcessor.java:178)
+	at io.quarkus.arc.deployment.ArcProcessor.validate(ArcProcessor.java:489)
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:732)
+	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:856)
+	at io.quarkus.builder.BuildContext.run(BuildContext.java:255)
+	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2675)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2654)
+	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1627)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1594)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:499)
+Caused by: jakarta.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type com.fii.practic.mes.admin.process.step.ProcessStepService and qualifiers [@Default]
+	- injection target: parameter 'processStepService' of com.fii.practic.mes.admin.process.plan.ProcessPlanService constructor
+	- declared on CLASS bean [types=[com.fii.practic.mes.admin.general.AbstractCRUDService<com.fii.practic.mes.models.ProcessPlanDTO, com.fii.practic.mes.admin.process.plan.ProcessPlanEntity>, com.fii.practic.mes.admin.process.plan.ProcessPlanService, java.lang.Object], qualifiers=[@Default, @Any], target=com.fii.practic.mes.admin.process.plan.ProcessPlanService]
+	at io.quarkus.arc.processor.Beans.resolveInjectionPoint(Beans.java:547)
+	at io.quarkus.arc.processor.BeanInfo.init(BeanInfo.java:689)
+	at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:323)
+	... 12 more
+
+	at io.quarkus.builder.Execution.run(Execution.java:122)
+	at io.quarkus.builder.BuildExecutionBuilder.execute(BuildExecutionBuilder.java:78)
+	at io.quarkus.deployment.QuarkusAugmentor.run(QuarkusAugmentor.java:161)
+	at io.quarkus.runner.bootstrap.AugmentActionImpl.runAugment(AugmentActionImpl.java:368)
+	... 9 more
+Caused by: jakarta.enterprise.inject.spi.DeploymentException: jakarta.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type com.fii.practic.mes.admin.process.step.ProcessStepService and qualifiers [@Default]
+	- injection target: parameter 'processStepService' of com.fii.practic.mes.admin.process.plan.ProcessPlanService constructor
+	- declared on CLASS bean [types=[com.fii.practic.mes.admin.general.AbstractCRUDService<com.fii.practic.mes.models.ProcessPlanDTO, com.fii.practic.mes.admin.process.plan.ProcessPlanEntity>, com.fii.practic.mes.admin.process.plan.ProcessPlanService, java.lang.Object], qualifiers=[@Default, @Any], target=com.fii.practic.mes.admin.process.plan.ProcessPlanService]
+	at io.quarkus.arc.processor.BeanDeployment.processErrors(BeanDeployment.java:1576)
+	at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:338)
+	at io.quarkus.arc.processor.BeanProcessor.initialize(BeanProcessor.java:178)
+	at io.quarkus.arc.deployment.ArcProcessor.validate(ArcProcessor.java:489)
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:732)
+	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:856)
+	at io.quarkus.builder.BuildContext.run(BuildContext.java:255)
+	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2675)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2654)
+	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1627)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1594)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:499)
+Caused by: jakarta.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type com.fii.practic.mes.admin.process.step.ProcessStepService and qualifiers [@Default]
+	- injection target: parameter 'processStepService' of com.fii.practic.mes.admin.process.plan.ProcessPlanService constructor
+	- declared on CLASS bean [types=[com.fii.practic.mes.admin.general.AbstractCRUDService<com.fii.practic.mes.models.ProcessPlanDTO, com.fii.practic.mes.admin.process.plan.ProcessPlanEntity>, com.fii.practic.mes.admin.process.plan.ProcessPlanService, java.lang.Object], qualifiers=[@Default, @Any], target=com.fii.practic.mes.admin.process.plan.ProcessPlanService]
+	at io.quarkus.arc.processor.Beans.resolveInjectionPoint(Beans.java:547)
+	at io.quarkus.arc.processor.BeanInfo.init(BeanInfo.java:689)
+	at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:323)
+	... 12 more
+
+2025-04-07 11:54:19.347 Timer-0                        (RuntimeUpdatesProcessor.java  :doScan                   :557 )	INFO  	Live reload total time: 0.712s 
+2025-04-07 11:54:32.666 Timer-0                        (RuntimeUpdatesProcessor.java  :doScan                   :550 )	INFO  	Restarting quarkus due to changes in ProcessPlanMapper.class, ProcessPlanRestClient.class, ProcessPlanService.class.
+2025-04-07 11:54:33.253 Timer-0                        (RuntimeUpdatesProcessor.java  :doScan                   :557 )	INFO  	Live reload total time: 0.613s 
+2025-04-07 11:54:38.673 Timer-0                        (RuntimeUpdatesProcessor.java  :doScan                   :550 )	INFO  	Restarting quarkus due to changes in OrderRestClient.class, OrderService.class, OrderMapper.class.
