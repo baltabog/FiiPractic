@@ -56,7 +56,6 @@ public class MaterialRestClient extends AbstractResource implements MaterialApi 
     public List<MaterialDTO> searchMaterials(@Valid SearchType searchType) {
         return registerTimer("searchMaterials")
                 .record(() -> service.read(searchType, response));
-
     }
 
     @Override
