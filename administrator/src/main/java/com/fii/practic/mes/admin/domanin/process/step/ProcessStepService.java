@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @ApplicationScoped
 public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, ProcessStepEntity> {
@@ -101,16 +102,17 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
     protected ProcessStepEntity createEntityFromDto(ProcessStepDTO dto, CreateArtificialDto createArtificialDto) {
         ProcessStepEntity entity = super.createEntityFromDto(dto, createArtificialDto);
 
-        entity.getProcessStepInputMaterial().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepInputMaterialEntity.class));
-        entity.getSuccessOutputMaterials().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepMaterialSuccessEntity.class));
-        entity.getFailOutputMaterials().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepMaterialFailEntity.class));
+        entity.getProcessStepInputMaterial().addAll(getStepMaterials(entity, dto.getInputMaterials(), ProcessStepInputMaterialEntity::new));
+        entity.getSuccessOutputMaterials().addAll(getStepMaterials(entity, dto.getSuccessOutputMaterials(), ProcessStepMaterialSuccessEntity::new));
+        entity.getFailOutputMaterials().addAll(getStepMaterials(entity, dto.getFailOutputMaterials(), ProcessStepMaterialFailEntity::new));
         entity.getEquipments().addAll(getEquipmentEntities(dto.getEquipments()));
 
         return entity;
     }
 
     private <E extends ProcessStepMaterialEntity> List<E> getStepMaterials(ProcessStepEntity processStepEntity,
-                                                                           Set<ProcessStepMaterialDTO> materialReferences, Class<E> entityType) {
+                                                                           Set<ProcessStepMaterialDTO> materialReferences,
+                                                                           Supplier<E> classConstructor) {
         if (CollectionUtils.isEmpty(materialReferences)) {
             return Collections.emptyList();
         }
@@ -119,12 +121,12 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
             MaterialEntity materialEntity = materialService.getByIdentity(new IdentityDTO()
                     .uuid(materialReference.getUuid())
                     .name(materialReference.getName()));
-            ProcessStepMaterialEntity processStepMaterialEntity = new ProcessStepMaterialEntity();
+            E processStepMaterialEntity = classConstructor.get();
             processStepMaterialEntity.setProcessStep(processStepEntity);
             processStepMaterialEntity.setMaterial(materialEntity);
             processStepMaterialEntity.setQuantity(materialReference.getQuantity());
 
-            processStepMaterialEntities.add(entityType.cast(processStepMaterialEntity));
+            processStepMaterialEntities.add(processStepMaterialEntity);
         }
         return processStepMaterialEntities;
 

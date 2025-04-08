@@ -9,13 +9,15 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "jakarta",
     uses = {AbstractEntityMapper.class})
 public interface ProcessStepMapper {
-
     ProcessStepDTO mapToDto(ProcessStepEntity entity);
 
     @Mapping(target = "version",            ignore = true)
     @Mapping(target = "updated",	        ignore = true)
     @Mapping(target = "updatedBy",	        ignore = true)
     @Mapping(target = "equipments",         ignore = true)
+    @Mapping(target = "processStepInputMaterial",   ignore = true)
+    @Mapping(target = "successOutputMaterials",     ignore = true)
+    @Mapping(target = "failOutputMaterials",        ignore = true)
     ProcessStepEntity mapToEntity(ProcessStepDTO dto);
 
     @Mapping(target = "id",                 ignore = true)
@@ -24,5 +26,8 @@ public interface ProcessStepMapper {
     @Mapping(target = "version",            ignore = true)
     @Mapping(target = "updated",	        ignore = true)
     @Mapping(target = "updatedBy",	        ignore = true)
+    @Mapping(target = "processStepInputMaterial",   ignore = true)
+    @Mapping(target = "successOutputMaterials",     ignore = true)
+    @Mapping(target = "failOutputMaterials",        ignore = true)
     ProcessStepEntity updateEntityWithDtoInfo(@MappingTarget ProcessStepEntity entity, ProcessStepDTO dto);
 }
