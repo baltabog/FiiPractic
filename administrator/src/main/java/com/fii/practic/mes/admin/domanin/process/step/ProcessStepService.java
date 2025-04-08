@@ -4,10 +4,13 @@ import com.fii.practic.mes.admin.domanin.equipment.tool.ToolEntity;
 import com.fii.practic.mes.admin.domanin.equipment.tool.ToolService;
 import com.fii.practic.mes.admin.domanin.material.MaterialEntity;
 import com.fii.practic.mes.admin.domanin.material.MaterialService;
+import com.fii.practic.mes.admin.domanin.process.plan.ProcessPlanService;
 import com.fii.practic.mes.admin.general.AbstractCRUDService;
 import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
 import com.fii.practic.mes.admin.general.dto.UpdateArtificialDto;
+import com.fii.practic.mes.admin.general.error.ApplicationRuntimeException;
+import com.fii.practic.mes.admin.general.error.ServerErrorEnum;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.ProcessStepDTO;
 import com.fii.practic.mes.models.ProcessStepMaterialDTO;
@@ -28,13 +31,15 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
     private final ProcessStepRepository repository;
     private final ToolService toolService;
     private final MaterialService materialService;
+    private final ProcessPlanService processPlanService;
 
     @Inject
-    public ProcessStepService(ProcessStepMapper mapper, ProcessStepRepository repository, ToolService toolService, MaterialService materialService) {
+    public ProcessStepService(ProcessStepMapper mapper, ProcessStepRepository repository, ToolService toolService, MaterialService materialService, ProcessPlanService processPlanService) {
         this.mapper = mapper;
         this.repository = repository;
         this.toolService = toolService;
         this.materialService = materialService;
+        this.processPlanService = processPlanService;
     }
 
     @Override
@@ -140,6 +145,9 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
     @Override
     protected ProcessStepEntity updateEntityWithDto(ProcessStepDTO dto, UpdateArtificialDto updateArtificialDto) {
         ProcessStepEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
+        if (processPlanService.existsProcessPlanWithProcessStep(entity)) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.UPDATE_PROCESS_STEP_USED_IN_PROCESS_PLAN);
+        }
 
         updateEquipments(entity, dto);
         updateInputMaterials(entity, dto);

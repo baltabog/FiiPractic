@@ -25,12 +25,16 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
     private final ProcessPlanRepository repository;
     private final ProcessPlanMapper mapper;
     private final ProcessStepService processStepService;
+    private final ProcessPlanStepRepository processPlanStepRepository;
 
     @Inject
-    public ProcessPlanService(ProcessPlanRepository repository, ProcessPlanMapper mapper, ProcessStepService processStepService) {
+    public ProcessPlanService(ProcessPlanRepository repository, ProcessPlanMapper mapper,
+                              ProcessStepService processStepService,
+                              ProcessPlanStepRepository processPlanStepRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.processStepService = processStepService;
+        this.processPlanStepRepository = processPlanStepRepository;
     }
 
     @Override
@@ -130,5 +134,11 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
             processPlanStepEntities.add(processPlanStep);
         }
         return processPlanStepEntities;
+    }
+
+    public boolean existsProcessPlanWithProcessStep(ProcessStepEntity processStepEntity) {
+        return processPlanStepRepository.stream("processStep.id", processStepEntity.getId())
+                .findAny()
+                .isPresent();
     }
 }
