@@ -24,7 +24,10 @@ public interface ProcessPlanMapper {
     @Mapping(target = "version",            ignore = true)
     @Mapping(target = "updated",	        ignore = true)
     @Mapping(target = "updatedBy",	        ignore = true)
+    @Mapping(target = "orderedProcessSteps",ignore = true)
     ProcessPlanEntity updateEntityWithDtoInfo(@MappingTarget ProcessPlanEntity entity, ProcessPlanDTO dto);
 
+    @Mapping(target = "uuid",           source = "processStep.uuid")
+    @Mapping(target = "name",           source = "processStep.name")
     OrderedProcessStepDTO mapToDto(ProcessPlanStepEntity entity);
 }

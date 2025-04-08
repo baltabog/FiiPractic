@@ -25,11 +25,27 @@ public final class PropertyDescriptionHolder {
     }
 
     private void registerProperties() {
-        registerEquipmentTypeDTO();
+        registerEquipmentTypeDto();
         registerToolDto();
+        registerMaterialDto();
+        registerProcessStepDto();
+        registerProcessPlanDto();
+
     }
 
-    private void registerEquipmentTypeDTO() {
+    private void registerProcessPlanDto() {
+        PROPERTY_DESCRIPTION_MAP.put("ProcessPlanDTO", getDefaultListOfProperties());
+    }
+
+    private void registerProcessStepDto() {
+        PROPERTY_DESCRIPTION_MAP.put("ProcessStepDTO", getDefaultListOfProperties());
+    }
+
+    private void registerMaterialDto() {
+        PROPERTY_DESCRIPTION_MAP.put("MaterialDTO", getDefaultListOfProperties());
+    }
+
+    private void registerEquipmentTypeDto() {
         PROPERTY_DESCRIPTION_MAP.put("EquipmentTypeDTO", getDefaultListOfProperties());
     }
 

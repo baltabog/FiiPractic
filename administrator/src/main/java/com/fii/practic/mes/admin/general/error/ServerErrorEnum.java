@@ -37,7 +37,7 @@ public enum ServerErrorEnum {
 	QUERY_INVALID_FILTER_UNARY_OPERATOR_MULTI_VALUES(400, "Invalid query filter <%s>. Multiple values found for unary operator.", Constants.PROPERTY_NAME),
 	QUERY_INVALID_FILTER_MULTI_OPERATOR_NO_VALUES(400, "Invalid query filter <%s>. No values found for multi operator.", Constants.PROPERTY_NAME),
 	UPDATE_PROCESS_STEP_USED_IN_PROCESS_PLAN(400, "Process step named <%s> can't be updated because it is already used by process plan named <%s>", Constants.ENTITY_NAME, Constants.ENTITY_NAME),
-
+	PROCESS_PLAN_HAS_AN_EQUIPMENT_EXECUTING_TWO_STEPS_OF_THE_SAME_PLAN(400, "Process plan has an equipment executing multiple steps of the same plan"),
 	;
 
 	@Getter

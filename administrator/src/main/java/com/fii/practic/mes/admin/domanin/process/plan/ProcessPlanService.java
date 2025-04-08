@@ -6,6 +6,9 @@ import com.fii.practic.mes.admin.domanin.process.step.ProcessStepService;
 import com.fii.practic.mes.admin.general.AbstractCRUDService;
 import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
+import com.fii.practic.mes.admin.general.dto.UpdateArtificialDto;
+import com.fii.practic.mes.admin.general.error.ApplicationRuntimeException;
+import com.fii.practic.mes.admin.general.error.ServerErrorEnum;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.OrderedProcessStepDTO;
 import com.fii.practic.mes.models.ProcessPlanDTO;
@@ -15,10 +18,9 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, ProcessPlanEntity> {
@@ -103,17 +105,16 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
     }
 
     private void checkNoEquipmentHasMultipleTasksPerPlan(ProcessPlanEntity currentProcessPlan) {
-        Map<ProcessStepEntity, Set<ToolEntity>> equipmentsGroupedByProcessSteps = currentProcessPlan.getOrderedProcessSteps().stream()
+        List<ToolEntity> toolEntities = currentProcessPlan.getOrderedProcessSteps().stream()
                 .map(ProcessPlanStepEntity::getProcessStep)
-                .collect(Collectors.toMap(
-                        processStep -> processStep,
-                        ProcessStepEntity::getEquipments
-                ));
+                .map(ProcessStepEntity::getEquipments)
+                .flatMap(Set::stream)
+                .toList();
 
-        for (Set<ToolEntity> tools : equipmentsGroupedByProcessSteps.values()) {
-
+        Set<ToolEntity> helperSet = new HashSet<>(toolEntities);
+        if (toolEntities.size() != helperSet.size()) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.PROCESS_PLAN_HAS_AN_EQUIPMENT_EXECUTING_TWO_STEPS_OF_THE_SAME_PLAN);
         }
-
     }
 
     private List<ProcessPlanStepEntity> getOrderedProcessSteps(ProcessPlanEntity processPlan, Set<OrderedProcessStepDTO> orderedProcessStepsRefs) {
@@ -136,9 +137,47 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
         return processPlanStepEntities;
     }
 
+    @Override
+    protected ProcessPlanEntity updateEntityWithDto(ProcessPlanDTO dto, UpdateArtificialDto updateArtificialDto) {
+        ProcessPlanEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
+        updateProcessSteps(entity, dto.getOrderedProcessSteps());
+        checkNoEquipmentHasMultipleTasksPerPlan(entity);
+        return entity;
+    }
+
+    private void updateProcessSteps(ProcessPlanEntity entity, Set<OrderedProcessStepDTO> orderedProcessSteps) {
+        entity.getOrderedProcessSteps().removeIf(
+                orderedProcessStep -> orderedProcessSteps.stream()
+                        .noneMatch(orderedProcessStepDTO
+                                -> orderedProcessStepDTO.getUuid().equals(orderedProcessStep.getProcessStep().getUuid()))
+        );
+
+        List<ProcessPlanStepEntity> processPlanStepEntities = new ArrayList<>();
+        for (OrderedProcessStepDTO orderedProcessStepDTO : orderedProcessSteps) {
+            ProcessStepEntity processStepEntity = processStepService.getByIdentity(new IdentityDTO()
+                    .uuid(orderedProcessStepDTO.getUuid())
+                    .name(orderedProcessStepDTO.getName()));
+
+            ProcessPlanStepEntity processPlanStepEntity = entity.getOrderedProcessSteps().stream()
+                    .filter(orderedProcessStep -> orderedProcessStep.getProcessStep().getUuid().equals(processStepEntity.getUuid()))
+                    .findFirst()
+                    .orElseGet(() -> getNewOrderedProcessStep(entity, processStepEntity));
+            processPlanStepEntity.setOrderInProcess(orderedProcessStepDTO.getOrderInProcess());
+            processPlanStepEntities.add(processPlanStepEntity);
+        }
+        entity.getOrderedProcessSteps().clear();
+        entity.getOrderedProcessSteps().addAll(processPlanStepEntities);
+    }
+
+    private ProcessPlanStepEntity getNewOrderedProcessStep(ProcessPlanEntity entity, ProcessStepEntity processStepEntity) {
+        ProcessPlanStepEntity processPlanStepEntity = new ProcessPlanStepEntity();
+        processPlanStepEntity.setProcessPlan(entity);
+        processPlanStepEntity.setProcessStep(processStepEntity);
+        return processPlanStepEntity;
+    }
+
     public boolean existsProcessPlanWithProcessStep(ProcessStepEntity processStepEntity) {
-        return processPlanStepRepository.find("processStep.id", processStepEntity.getId())
-                .firstResultOptional()
-                .isPresent();
+        return processPlanStepRepository.stream("processStep.id", processStepEntity.getId())
+                .findAny().isPresent();
     }
 }

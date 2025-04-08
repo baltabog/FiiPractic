@@ -1,6 +1,7 @@
 package com.fii.practic.mes.admin.general.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,6 +14,6 @@ public class UpdateArtificialDto {
     private final String name;
     @NotNull
     private final Integer version;
-    @NotNull
+    @Null
     private final String updatedBy;
 }
