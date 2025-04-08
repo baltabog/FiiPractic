@@ -48,7 +48,7 @@ public class ProcessStepEntity extends AbstractEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProcessStepMaterialFailEntity> failOutputMaterials = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "T_PROCESS_STEP_EQUIPMENT",
             joinColumns = { @JoinColumn(name = "PROCESS_STEP_ID") },

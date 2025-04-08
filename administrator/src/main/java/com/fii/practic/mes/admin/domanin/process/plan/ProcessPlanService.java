@@ -137,8 +137,8 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
     }
 
     public boolean existsProcessPlanWithProcessStep(ProcessStepEntity processStepEntity) {
-        return processPlanStepRepository.stream("processStep.id", processStepEntity.getId())
-                .findAny()
+        return processPlanStepRepository.find("processStep.id", processStepEntity.getId())
+                .firstResultOptional()
                 .isPresent();
     }
 }
