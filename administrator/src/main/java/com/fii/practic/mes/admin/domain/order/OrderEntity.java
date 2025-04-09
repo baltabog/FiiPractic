@@ -44,5 +44,4 @@ public class OrderEntity extends AbstractEntity {
     @NotNull
     private Integer completeQty;
 
-
 }
