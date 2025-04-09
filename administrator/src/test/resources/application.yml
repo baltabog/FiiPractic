@@ -1,0 +1,13 @@
+"%test":
+  quarkus:
+    hibernate-orm:
+      database:
+        generation: drop-and-create
+    datasource:
+      db-kind: mariadb
+      devservices:
+        enabled: true
+        command: [ 'mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin' ]
+        properties:
+          character_set_server: utf8mb4
+          collation_server: utf8mb4_bin
