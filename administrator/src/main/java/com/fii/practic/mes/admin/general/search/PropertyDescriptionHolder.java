@@ -30,7 +30,11 @@ public final class PropertyDescriptionHolder {
         registerMaterialDto();
         registerProcessStepDto();
         registerProcessPlanDto();
+        registerOrderDto();
+    }
 
+    private void registerOrderDto() {
+        PROPERTY_DESCRIPTION_MAP.put("OrderDTO", getDefaultListOfProperties());
     }
 
     private void registerProcessPlanDto() {

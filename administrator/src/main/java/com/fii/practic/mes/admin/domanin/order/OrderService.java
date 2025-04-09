@@ -5,6 +5,8 @@ import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
 import com.fii.practic.mes.admin.general.dto.UpdateArtificialDto;
 import com.fii.practic.mes.admin.domanin.process.plan.ProcessPlanService;
+import com.fii.practic.mes.admin.general.error.ApplicationRuntimeException;
+import com.fii.practic.mes.admin.general.error.ServerErrorEnum;
 import com.fii.practic.mes.models.OrderDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -90,7 +92,9 @@ public class OrderService extends AbstractCRUDService<OrderDTO, OrderEntity> {
     protected OrderEntity updateEntityWithDto(OrderDTO dto, UpdateArtificialDto updateArtificialDto) {
         OrderEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
 
-        entity.setProcessPlan(processPlanService.getByIdentity(dto.getProcess()));
+        if (!dto.getProcess().getUuid().equals(entity.getProcessPlan().getUuid())) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.UPDATE_FIELD_NOT_ALLOWED, getDtoName(), "processPlan");
+        }
 
         return entity;
     }
