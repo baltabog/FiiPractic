@@ -148,7 +148,7 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
     protected ProcessStepEntity updateEntityWithDto(ProcessStepDTO dto, UpdateArtificialDto updateArtificialDto) {
         ProcessStepEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
         if (processPlanService.existsProcessPlanWithProcessStep(entity)) {
-            throw new ApplicationRuntimeException(ServerErrorEnum.UPDATE_PROCESS_STEP_USED_IN_PROCESS_PLAN);
+            throw new ApplicationRuntimeException(ServerErrorEnum.UPDATE_PROCESS_STEP_USED_IN_PROCESS_PLAN, entity.getName());
         }
 
         updateEquipments(entity, dto);

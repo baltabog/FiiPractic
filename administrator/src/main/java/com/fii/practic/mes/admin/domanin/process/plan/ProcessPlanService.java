@@ -1,6 +1,7 @@
 package com.fii.practic.mes.admin.domanin.process.plan;
 
 import com.fii.practic.mes.admin.domanin.equipment.tool.ToolEntity;
+import com.fii.practic.mes.admin.domanin.order.OrderService;
 import com.fii.practic.mes.admin.domanin.process.step.ProcessStepEntity;
 import com.fii.practic.mes.admin.domanin.process.step.ProcessStepService;
 import com.fii.practic.mes.admin.general.AbstractCRUDService;
@@ -28,15 +29,17 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
     private final ProcessPlanMapper mapper;
     private final ProcessStepService processStepService;
     private final ProcessPlanStepRepository processPlanStepRepository;
+    private final OrderService orderService;
 
     @Inject
     public ProcessPlanService(ProcessPlanRepository repository, ProcessPlanMapper mapper,
                               ProcessStepService processStepService,
-                              ProcessPlanStepRepository processPlanStepRepository) {
+                              ProcessPlanStepRepository processPlanStepRepository, OrderService orderService) {
         this.repository = repository;
         this.mapper = mapper;
         this.processStepService = processStepService;
         this.processPlanStepRepository = processPlanStepRepository;
+        this.orderService = orderService;
     }
 
     @Override
@@ -140,6 +143,9 @@ public class ProcessPlanService extends AbstractCRUDService<ProcessPlanDTO, Proc
     @Override
     protected ProcessPlanEntity updateEntityWithDto(ProcessPlanDTO dto, UpdateArtificialDto updateArtificialDto) {
         ProcessPlanEntity entity = super.updateEntityWithDto(dto, updateArtificialDto);
+        if (orderService.existsOrderWithPlan(entity)) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.UPDATE_PROCESS_PLAN_USED_IN_ORDER, entity.getName());
+        }
         updateProcessSteps(entity, dto.getOrderedProcessSteps());
         checkNoEquipmentHasMultipleTasksPerPlan(entity);
         return entity;

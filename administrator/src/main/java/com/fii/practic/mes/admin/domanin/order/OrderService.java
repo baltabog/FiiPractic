@@ -1,5 +1,6 @@
 package com.fii.practic.mes.admin.domanin.order;
 
+import com.fii.practic.mes.admin.domanin.process.plan.ProcessPlanEntity;
 import com.fii.practic.mes.admin.general.AbstractCRUDService;
 import com.fii.practic.mes.admin.general.AbstractRepository;
 import com.fii.practic.mes.admin.general.dto.CreateArtificialDto;
@@ -97,5 +98,11 @@ public class OrderService extends AbstractCRUDService<OrderDTO, OrderEntity> {
         }
 
         return entity;
+    }
+
+    public boolean existsOrderWithPlan(ProcessPlanEntity processPlanEntity) {
+        return repository.find("processPlan.id", processPlanEntity.getId())
+                .firstResultOptional()
+                .isPresent();
     }
 }
