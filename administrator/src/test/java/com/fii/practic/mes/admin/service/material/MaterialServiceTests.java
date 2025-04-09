@@ -1,17 +1,16 @@
-package com.fii.practic.mes.admin.service.equipment.type;
+package com.fii.practic.mes.admin.service.material;
 
-import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeEntity;
-import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeRepository;
-import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeService;
-import com.fii.practic.mes.models.EquipmentTypeDTO;
+import com.fii.practic.mes.admin.domain.material.MaterialEntity;
+import com.fii.practic.mes.admin.domain.material.MaterialRepository;
+import com.fii.practic.mes.admin.domain.material.MaterialService;
 import com.fii.practic.mes.models.IdentityDTO;
+import com.fii.practic.mes.models.MaterialDTO;
 import com.fii.practic.mes.models.SearchType;
 import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.http.HttpServerResponse;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -27,13 +26,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class EquipmentTypeServiceTests {
+public class MaterialServiceTests {
     private static final String UPDATED_BY = "system";
-    public static final String TEST_TYPE = "testType";
+    public static final String TEST_MATERIAL = "TEST_MATERIAL";
     @Inject
-    EquipmentTypeService service;
+    MaterialService service;
     @Inject
-    EquipmentTypeRepository repository;
+    MaterialRepository repository;
+
+    private MaterialDTO getMinimalValidCreateDto() {
+        return new MaterialDTO()
+                .name(TEST_MATERIAL)
+                .availableQuantity(10)
+                .quantityUnit("g");
+    }
+
+    private MaterialDTO getMinimalValidUpdateDto() {
+        return getMinimalValidCreateDto()
+                .uuid(UUID.randomUUID().toString())
+                .updatedBy(UPDATED_BY)
+                .version(1);
+    }
 
     @Test
     public void testCreateNoBody() {
@@ -48,10 +61,11 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testCreateWithNullName() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO();
+        MaterialDTO materialDTO = getMinimalValidCreateDto()
+                .name(null);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.create(equipmentTypeDTO));
+                () -> service.create(materialDTO));
         assertTrue(runtimeException.getMessage()
                 .contains("message: must not be null"));
         assertTrue(runtimeException.getMessage()
@@ -60,24 +74,24 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testCreateTypeEmptyName() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
+        MaterialDTO materialDTO = getMinimalValidCreateDto()
                 .name(StringUtils.EMPTY);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.create(equipmentTypeDTO));
+                () -> service.create(materialDTO));
         assertTrue(runtimeException.getMessage()
                 .contains("message: size must be between"));
         assertTrue(runtimeException.getMessage()
                 .contains("create.dto.name"));
     }
+
     @Test
     public void testCreateSucceed() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
 
-        EquipmentTypeDTO responseDto = service.create(equipmentTypeDTO);
+        MaterialDTO responseDto = service.create(materialDTO);
 
-        assertEquipmentTypesEquality(equipmentTypeDTO, responseDto);
+        assertMaterialsEquality(materialDTO, responseDto);
     }
 
     @Test
@@ -92,13 +106,12 @@ public class EquipmentTypeServiceTests {
     }
     @Test
     public void testUpdateNullName() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdEquipmentTypeDto = service.create(equipmentTypeDTO);
-        createdEquipmentTypeDto.setName(null);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdMaterialDto = service.create(materialDTO);
+        createdMaterialDto.setName(null);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.update(createdEquipmentTypeDto));
+                () -> service.update(createdMaterialDto));
 
         assertTrue(runtimeException.getMessage()
                 .contains("message: must not be null"));
@@ -108,13 +121,12 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testUpdateNullVersion() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdEquipmentTypeDto = service.create(equipmentTypeDTO);
-        createdEquipmentTypeDto.setVersion(null);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdMaterialDto = service.create(materialDTO);
+        createdMaterialDto.setVersion(null);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.update(createdEquipmentTypeDto));
+                () -> service.update(createdMaterialDto));
 
         assertTrue(runtimeException.getMessage()
                 .contains("version must not be null"));
@@ -122,49 +134,32 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testUpdateNullUuid() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdEquipmentTypeDto = service.create(equipmentTypeDTO);
-        createdEquipmentTypeDto.setUuid(null);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdMaterialDto = service.create(materialDTO);
+        createdMaterialDto.setUuid(null);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.update(createdEquipmentTypeDto));
+                () -> service.update(createdMaterialDto));
 
         assertTrue(runtimeException.getMessage()
                 .contains("uuid must not be null"));
     }
 
     @Test
-    public void testUpdateName() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdEquipmentTypeDto = service.create(equipmentTypeDTO);
-        createdEquipmentTypeDto.setName("new name");
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.update(createdEquipmentTypeDto));
-
-        assertTrue(runtimeException.getMessage()
-                .contains("The server denied the request to update <EquipmentTypeDTO> name."));
-    }
-
-    @Test
     public void testUpdateSuccess() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdEquipmentTypeDto = service.create(equipmentTypeDTO);
-        createdEquipmentTypeDto.setDescription("description");
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdMaterialDto = service.create(materialDTO);
+        createdMaterialDto.setDescription("description");
 
-        EquipmentTypeDTO updatedDto = service.update(createdEquipmentTypeDto);
-        assertEquipmentTypesEquality(createdEquipmentTypeDto, updatedDto);
+        MaterialDTO updatedDto = service.update(createdMaterialDto);
+        assertMaterialsEquality(createdMaterialDto, updatedDto);
     }
 
     @Test
     public void testGetByNullIdentity() {
         IdentityDTO identityDTO =  null;
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO responseDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO responseDto = service.create(materialDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
                 () -> service.getByIdentity(identityDTO));
@@ -178,9 +173,8 @@ public class EquipmentTypeServiceTests {
     @Test
     public void testGetByNullIdentityWithNullUuid() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO responseDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO responseDto = service.create(materialDTO);
         identityDTO.setName(responseDto.getName());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -195,9 +189,8 @@ public class EquipmentTypeServiceTests {
     @Test
     public void testGetByNullIdentityWithNullName() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO responseDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO responseDto = service.create(materialDTO);
         identityDTO.setUuid(responseDto.getUuid());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -212,9 +205,8 @@ public class EquipmentTypeServiceTests {
     @Test
     public void testGetByNullIdentityWithEmptyName() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO responseDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO responseDto = service.create(materialDTO);
         identityDTO.setName(StringUtils.EMPTY);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -229,9 +221,8 @@ public class EquipmentTypeServiceTests {
     @Test
     public void testGetByNullIdentityWithEmptyUuid() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO responseDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO responseDto = service.create(materialDTO);
         identityDTO.setName(StringUtils.EMPTY);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -246,14 +237,13 @@ public class EquipmentTypeServiceTests {
     @Test
     public void testGetByIdentitySuccess() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdDto = service.create(materialDTO);
         identityDTO.setUuid(createdDto.getUuid());
         identityDTO.setName(createdDto.getName());
 
-        EquipmentTypeEntity getByIdentityDto = service.getByIdentity(identityDTO);
-        assertEquipmentTypesEquality(createdDto, getByIdentityDto);
+        MaterialEntity getByIdentityDto = service.getByIdentity(identityDTO);
+        assertMaterialsEquality(createdDto, getByIdentityDto);
     }
 
     @Test
@@ -261,9 +251,9 @@ public class EquipmentTypeServiceTests {
         HttpServerResponse httpServerResponse = Mockito.mock(HttpServerResponse.class);
 
         for (int index = 1; index <= 5; index ++) {
-            EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                    .name(TEST_TYPE + index);
-            EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+            MaterialDTO materialDTO = getMinimalValidCreateDto()
+                    .name(TEST_MATERIAL + index);
+            MaterialDTO createdDto = service.create(materialDTO);
         }
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -278,9 +268,9 @@ public class EquipmentTypeServiceTests {
         HttpServerResponse httpServerResponse = Mockito.mock(HttpServerResponse.class);
 
         for (int index = 1; index <= 5; index ++) {
-            EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                    .name(TEST_TYPE + index);
-            EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+            MaterialDTO materialDTO = getMinimalValidCreateDto()
+                    .name(TEST_MATERIAL + index);
+            MaterialDTO createdDto = service.create(materialDTO);
         }
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -293,9 +283,8 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testDeleteNullUuid() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdDto = service.create(materialDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
                 () -> service.delete(null, createdDto.getVersion()));
@@ -307,9 +296,8 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testDeleteWrongUuid() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdDto = service.create(materialDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
                 () -> service.delete(UUID.randomUUID().toString(), createdDto.getVersion()));
@@ -319,24 +307,22 @@ public class EquipmentTypeServiceTests {
 
     @Test
     public void testDeleteSuccess() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdDto = service.create(materialDTO);
 
         service.delete(createdDto.getUuid(), createdDto.getVersion());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> service.getByIdentity(new IdentityDTO()
                 .uuid(createdDto.getUuid())
                 .name(createdDto.getName())));
-        assertTrue(runtimeException.getMessage().contains("Error finding EquipmentType with id"));
+        assertTrue(runtimeException.getMessage().contains("Error finding Material with id"));
 
     }
 
     @Test
     public void testDeleteNullVersion() {
-        EquipmentTypeDTO equipmentTypeDTO = new EquipmentTypeDTO()
-                .name(TEST_TYPE);
-        EquipmentTypeDTO createdDto = service.create(equipmentTypeDTO);
+        MaterialDTO materialDTO = getMinimalValidCreateDto();
+        MaterialDTO createdDto = service.create(materialDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
                 () -> service.delete(createdDto.getUuid(), null));
@@ -346,50 +332,51 @@ public class EquipmentTypeServiceTests {
                 .contains("property path: delete.version"));
     }
 
-    private void assertEquipmentTypesEquality(EquipmentTypeDTO expected, EquipmentTypeDTO actual) {
+    private void assertMaterialsEquality(MaterialDTO expected, MaterialDTO actual) {
         if (expected.getUuid() != null) {
-            assertEquals(expected.getUuid(), actual.getUuid(), "Wrong equipmentType.uuid");
+            assertEquals(expected.getUuid(), actual.getUuid(), "Wrong material.uuid");
         } else {
-            assertNotNull(actual.getUuid(), "Wrong equipmentType.uuid");
+            assertNotNull(actual.getUuid(), "Wrong material.uuid");
         }
 
-        assertEquals(expected.getName(), actual.getName(), "Wrong equipmentType.name");
-        assertEquals(expected.getDescription(), actual.getDescription(), "Wrong equipmentType.description");
+        assertEquals(expected.getName(), actual.getName(), "Wrong material.name");
+        assertEquals(expected.getDescription(), actual.getDescription(), "Wrong material.description");
 
         if (expected.getVersion() == null) {
-            assertEquals(1, actual.getVersion(), "Wrong equipmentType.version");
+            assertEquals(1, actual.getVersion(), "Wrong material.version");
         } else if (expected.getUpdated() == null || expected.getUpdated().isBefore(actual.getUpdated())) {
-            assertEquals(expected.getVersion() + 1, actual.getVersion(), "Wrong equipmentType.version");
+            assertEquals(expected.getVersion() + 1, actual.getVersion(), "Wrong material.version");
         } else {
-            assertEquals(expected.getVersion(), actual.getVersion(), "Wrong equipmentType.version");
+            assertEquals(expected.getVersion(), actual.getVersion(), "Wrong material.version");
         }
-        assertEquals(UPDATED_BY, actual.getUpdatedBy(), "Wrong equipmentType.updatedBy");
-        assertNotNull(actual.getUpdated(), "Wrong equipmentType.updated");
+        assertEquals(UPDATED_BY, actual.getUpdatedBy(), "Wrong material.updatedBy");
+        assertEquals(expected.getAvailableQuantity(), actual.getAvailableQuantity(), "Wrong material.availableQuantity");
+        assertEquals(expected.getQuantityUnit(), actual.getQuantityUnit(), "Wrong material.quantityUnit");
+        assertNotNull(actual.getUpdated(), "Wrong material.updated");
     }
 
-    private void assertEquipmentTypesEquality(EquipmentTypeDTO expected, EquipmentTypeEntity actual) {
+    private void assertMaterialsEquality(MaterialDTO expected, MaterialEntity actual) {
         if (expected.getUuid() != null) {
-            assertEquals(expected.getUuid(), actual.getUuid(), "Wrong equipmentType.uuid");
+            assertEquals(expected.getUuid(), actual.getUuid(), "Wrong material.uuid");
         } else {
-            assertNotNull(actual.getUuid(), "Wrong equipmentType.uuid");
+            assertNotNull(actual.getUuid(), "Wrong material.uuid");
         }
 
-        assertEquals(expected.getName(), actual.getName(), "Wrong equipmentType.name");
-        assertEquals(expected.getDescription(), actual.getDescription(), "Wrong equipmentType.description");
+        assertEquals(expected.getName(), actual.getName(), "Wrong material.name");
+        assertEquals(expected.getDescription(), actual.getDescription(), "Wrong material.description");
 
         if (expected.getVersion() == null) {
-            assertEquals(1, actual.getVersion(), "Wrong equipmentType.version");
+            assertEquals(1, actual.getVersion(), "Wrong material.version");
         } else if (expected.getUpdated() == null || expected.getUpdated().isBefore(actual.getUpdated().atOffset(OffsetDateTime.now().getOffset()))) {
-            assertEquals(expected.getVersion() + 1, actual.getVersion(), "Wrong equipmentType.version");
+            assertEquals(expected.getVersion() + 1, actual.getVersion(), "Wrong material.version");
         } else {
-            assertEquals(expected.getVersion(), actual.getVersion(), "Wrong equipmentType.version");
+            assertEquals(expected.getVersion(), actual.getVersion(), "Wrong material.version");
         }
-        assertEquals(UPDATED_BY, actual.getUpdatedBy(), "Wrong equipmentType.updatedBy");
-        assertNotNull(actual.getUpdated(), "Wrong equipmentType.updated");
+        assertEquals(UPDATED_BY, actual.getUpdatedBy(), "Wrong material.updatedBy");
+        assertNotNull(actual.getUpdated(), "Wrong material.updated");
     }
 
     @BeforeEach
-    @BeforeAll
     public void beforeEach() {
         QuarkusTransaction.begin();
         repository.deleteAll();

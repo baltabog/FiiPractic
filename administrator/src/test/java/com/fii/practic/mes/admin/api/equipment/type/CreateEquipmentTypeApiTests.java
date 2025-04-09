@@ -65,7 +65,7 @@ public class CreateEquipmentTypeApiTests {
     }
 
     @Test
-    public void testCreateTypeWithNullName() {
+    public void testCreateWithNullName() {
         EquipmentTypeDTO inputBodyDto = new EquipmentTypeDTO();
 
         Response requestResponse = given().body(getString(inputBodyDto))
