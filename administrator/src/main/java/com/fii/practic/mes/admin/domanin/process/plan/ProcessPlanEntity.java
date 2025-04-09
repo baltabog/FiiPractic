@@ -3,7 +3,6 @@ package com.fii.practic.mes.admin.domanin.process.plan;
 import com.fii.practic.mes.admin.general.AbstractEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -31,8 +30,7 @@ public class ProcessPlanEntity extends AbstractEntity {
         public static final String ENTITY_NAME = "ProcessPlan";
         public static final String TABLE_NAME = "T_PROCESS_PLAN";
 
-        @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processPlan")
+        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processPlan")
         @OnDelete(action = OnDeleteAction.CASCADE)
         private List<ProcessPlanStepEntity> orderedProcessSteps = new ArrayList<>();
-
 }

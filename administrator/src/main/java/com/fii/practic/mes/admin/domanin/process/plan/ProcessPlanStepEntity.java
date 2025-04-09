@@ -3,6 +3,7 @@ package com.fii.practic.mes.admin.domanin.process.plan;
 import com.fii.practic.mes.admin.domanin.process.step.ProcessStepEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,14 +33,14 @@ public class ProcessPlanStepEntity {
         @SequenceGenerator(name = "entity_id_generator", sequenceName = "T_SEQUENCE__ID", allocationSize = 1)
         private Long id;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "PROCESS_PLAN_ID", nullable = false, updatable = false,
                 foreignKey = @ForeignKey(name = "FK_T_PROCESS_PLAN_STEP__PROCESS_PLAN_ID"))
         @NotNull
         @NaturalId
         private ProcessPlanEntity processPlan;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "PROCESS_STEP_ID", nullable = false, updatable = false,
                 foreignKey = @ForeignKey(name = "FK_T_PROCESS_PLAN_STEP__PROCESS_STEP_ID"))
         @NotNull

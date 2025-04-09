@@ -1,9 +1,10 @@
 package com.fii.practic.mes.admin.domanin.order;
 
-import com.fii.practic.mes.admin.general.AbstractEntity;
 import com.fii.practic.mes.admin.domanin.process.plan.ProcessPlanEntity;
+import com.fii.practic.mes.admin.general.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -28,7 +29,7 @@ public class OrderEntity extends AbstractEntity {
     public static final String ENTITY_NAME = "Order";
     public static final String TABLE_NAME = "T_ORDER";
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROCESS_PLAN_ID", nullable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_T_ORDER__PROCEES_PLAN_ID"))
     @NotNull
@@ -41,6 +42,5 @@ public class OrderEntity extends AbstractEntity {
     @Column(name = "COMPLETE_QTY", nullable = false)
     @NotNull
     private Integer completeQty;
-
 
 }
