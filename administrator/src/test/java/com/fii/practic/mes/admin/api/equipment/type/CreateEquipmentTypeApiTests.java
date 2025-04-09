@@ -1,4 +1,4 @@
-package com.fii.practic.mes.admin.api;
+package com.fii.practic.mes.admin.api.equipment.type;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

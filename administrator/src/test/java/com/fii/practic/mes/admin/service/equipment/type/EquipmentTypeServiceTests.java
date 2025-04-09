@@ -1,4 +1,4 @@
-package com.fii.practic.mes.admin.service;
+package com.fii.practic.mes.admin.service.equipment.type;
 
 import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeEntity;
 import com.fii.practic.mes.admin.domain.equipment.type.EquipmentTypeRepository;
