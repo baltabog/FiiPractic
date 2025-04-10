@@ -1,7 +1,5 @@
 package com.fii.practic.mes.wip.general.error;
 
-import com.fii.practic.mes.wip.general.AbstractEntity;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
@@ -131,9 +129,8 @@ public class ErrorMapper implements ExceptionMapper<Exception> {
                 return handleConstraintViolationException((ConstraintViolationException) cause);
             } else if (cause instanceof StaleObjectStateException) {
                 return handleStaleObjectStateException((StaleObjectStateException) cause);
-            } else if (cause instanceof OptimisticLockException) {
-                return handleOptimisticLockException((OptimisticLockException) cause);
             }
+
             cause = cause.getCause();
         }
 
@@ -146,27 +143,5 @@ public class ErrorMapper implements ExceptionMapper<Exception> {
 
         return new ApplicationRuntimeException(ServerErrorEnum.OPTIMISTIC_LOCK_ERROR, staleException.getEntityName(),
                 staleException.getIdentifier().toString());
-    }
-
-    private ApplicationRuntimeException handleOptimisticLockException(final OptimisticLockException lockException) {
-        if (lockException.getEntity() instanceof AbstractEntity entity) {
-            String name = "";
-            if (Objects.nonNull(entity.getName())) {
-                name = entity.getName();
-            }
-            final String entityId = String.valueOf(entity.getUuid());
-            final String entityClassIdAndName = " " + entity.getClass() + " , id=" + entityId + ", name=" + name;
-            LOGGER.error("Optimistic lock exception " + entityClassIdAndName, lockException);
-
-            if (!name.isEmpty()) {
-                return new ApplicationRuntimeException(ServerErrorEnum.OPTIMISTIC_LOCK_ERROR_NAMED,
-                        entity.getClass().getName(), name);
-            }
-            return new ApplicationRuntimeException(ServerErrorEnum.OPTIMISTIC_LOCK_ERROR_ID,
-                    entity.getClass().getName(), entityId);
-        }
-
-        return new ApplicationRuntimeException(ServerErrorEnum.OPTIMISTIC_LOCK_ERROR,
-                lockException.getEntity().getClass().getName());
     }
 }
