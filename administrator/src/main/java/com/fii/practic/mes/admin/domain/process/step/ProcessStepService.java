@@ -133,9 +133,6 @@ public class ProcessStepService extends AbstractCRUDService<ProcessStepDTO, Proc
     }
 
     private Collection<? extends ToolEntity> getEquipmentEntities(Set<IdentityDTO> equipmentReferences) {
-        if (CollectionUtils.isEmpty(equipmentReferences)) {
-            return Collections.emptyList();
-        }
         Set<ToolEntity> equipmentEntities = new HashSet<>();
         equipmentReferences.stream()
                 .map(toolService::getByIdentity)
