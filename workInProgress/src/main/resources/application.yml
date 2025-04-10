@@ -50,6 +50,7 @@ quarkus:
         bind-parameters: true
 
 "%production":
+  quarkus:
     log:
       level: INFO
       console:
