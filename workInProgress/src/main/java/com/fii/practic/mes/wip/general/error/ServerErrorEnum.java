@@ -36,7 +36,9 @@ public enum ServerErrorEnum {
 	QUERY_INVALID_FILTER_LOGICAL_OPERATOR_WITH_VALUES(400, "Invalid query filter <%s>. Logical operator doesn't accept values.", Constants.PROPERTY_NAME),
 	QUERY_INVALID_FILTER_UNARY_OPERATOR_MULTI_VALUES(400, "Invalid query filter <%s>. Multiple values found for unary operator.", Constants.PROPERTY_NAME),
 	QUERY_INVALID_FILTER_MULTI_OPERATOR_NO_VALUES(400, "Invalid query filter <%s>. No values found for multi operator.", Constants.PROPERTY_NAME),
-
+	ADMIN_SERVICE_CALL_FAILED(500, "Admin server request failed: <%s>", Constants.MESSAGE),
+	NEW_ORDER_STATUS_NOT_PERMITTED(400, "Order status can not be changed to <%s>", Constants.PROPERTY_NAME),
+	ORDER_STATUS_TRANSITION_NOT_PERMITTED(400, "Can not change order status from <%s> to <%s>", Constants.PROPERTY_NAME, Constants.PROPERTY_NAME),
 	;
 
 	@Getter
