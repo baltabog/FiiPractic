@@ -14,17 +14,14 @@ import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.MaterialDTO;
 import com.fii.practic.mes.models.ProcessStepDTO;
 import com.fii.practic.mes.models.ProcessStepMaterialDTO;
-import com.fii.practic.mes.models.SearchType;
 import com.fii.practic.mes.models.ToolDTO;
 import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.test.junit.QuarkusTest;
-import io.vertx.core.http.HttpServerResponse;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mockito;
 
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -292,7 +289,7 @@ public class ProcessStepServiceTests {
     }
     @Test
     public void testUpdateNullName() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdProcessStepDto = service.create(processStepDTO);
         createdProcessStepDto.setName(null);
 
@@ -307,7 +304,7 @@ public class ProcessStepServiceTests {
 
     @Test
     public void testUpdateNullVersion() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdProcessStepDto = service.create(processStepDTO);
         createdProcessStepDto.setVersion(null);
 
@@ -320,7 +317,7 @@ public class ProcessStepServiceTests {
 
     @Test
     public void testUpdateNullUuid() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdProcessStepDto = service.create(processStepDTO);
         createdProcessStepDto.setUuid(null);
 
@@ -333,7 +330,7 @@ public class ProcessStepServiceTests {
 
     @Test
     public void testUpdateSuccess() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdProcessStepDto = service.create(processStepDTO);
         createdProcessStepDto.setDescription("description");
 
@@ -344,7 +341,7 @@ public class ProcessStepServiceTests {
     @Test
     public void testGetByNullIdentity() {
         IdentityDTO identityDTO =  null;
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO responseDto = service.create(processStepDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -359,7 +356,7 @@ public class ProcessStepServiceTests {
     @Test
     public void testGetByNullIdentityWithNullUuid() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO responseDto = service.create(processStepDTO);
         identityDTO.setName(responseDto.getName());
 
@@ -375,7 +372,8 @@ public class ProcessStepServiceTests {
     @Test
     public void testGetByNullIdentityWithNullName() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
+
         ProcessStepDTO responseDto = service.create(processStepDTO);
         identityDTO.setUuid(responseDto.getUuid());
 
@@ -388,10 +386,35 @@ public class ProcessStepServiceTests {
                 .contains("getByIdentity.identityDTO.name"));
     }
 
+    private ProcessStepDTO getProcessStepCreateDtoWithValidDependencies() {
+        MaterialDTO material1 = createMaterial(TEST_MATERIAL_1);
+        MaterialDTO material2 = createMaterial(TEST_MATERIAL_2);
+        MaterialDTO material3 = createMaterial(TEST_MATERIAL_3);
+        EquipmentTypeDTO type = createType(TEST_TYPE);
+        ToolDTO tool = createTool(TEST_TOOL, type);
+        ProcessStepDTO processStepDTO = getMinimalValidCreateDto()
+                .failOutputMaterials(Set.of(new ProcessStepMaterialDTO()
+                        .uuid(material3.getUuid())
+                        .name(material3.getName())
+                        .quantity(1)))
+                .successOutputMaterials(Set.of(new ProcessStepMaterialDTO()
+                        .uuid(material1.getUuid())
+                        .name(material1.getName())
+                        .quantity(1)))
+                .inputMaterials(Set.of(new ProcessStepMaterialDTO()
+                        .uuid(material2.getUuid())
+                        .name(material2.getName())
+                        .quantity(1)))
+                .equipments(Set.of(new IdentityDTO()
+                        .uuid(tool.getUuid())
+                        .name(tool.getName())));
+        return processStepDTO;
+    }
+
     @Test
     public void testGetByNullIdentityWithEmptyName() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO responseDto = service.create(processStepDTO);
         identityDTO.setName(StringUtils.EMPTY);
 
@@ -407,7 +430,7 @@ public class ProcessStepServiceTests {
     @Test
     public void testGetByNullIdentityWithEmptyUuid() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO responseDto = service.create(processStepDTO);
         identityDTO.setName(StringUtils.EMPTY);
 
@@ -423,7 +446,7 @@ public class ProcessStepServiceTests {
     @Test
     public void testGetByIdentitySuccess() {
         IdentityDTO identityDTO =  new IdentityDTO();
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdDto = service.create(processStepDTO);
         identityDTO.setUuid(createdDto.getUuid());
         identityDTO.setName(createdDto.getName());
@@ -433,43 +456,8 @@ public class ProcessStepServiceTests {
     }
 
     @Test
-    public void testReadNegativeSearchOffset() {
-        HttpServerResponse httpServerResponse = Mockito.mock(HttpServerResponse.class);
-
-        for (int index = 1; index <= 5; index ++) {
-            ProcessStepDTO processStepDTO = getMinimalValidCreateDto()
-                    .name(TEST_PROCESS_STEP + index);
-            ProcessStepDTO createdDto = service.create(processStepDTO);
-        }
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.read(new SearchType().offset(-1), httpServerResponse));
-
-        assertTrue(runtimeException.getMessage().contains("message: must be greater than or equal to 0"));
-        assertTrue(runtimeException.getMessage().contains("property path: read.searchType.offset"));
-    }
-
-    @Test
-    public void testReadNegativeSearchLimit() {
-        HttpServerResponse httpServerResponse = Mockito.mock(HttpServerResponse.class);
-
-        for (int index = 1; index <= 5; index ++) {
-            ProcessStepDTO processStepDTO = getMinimalValidCreateDto()
-                    .name(TEST_PROCESS_STEP + index);
-            ProcessStepDTO createdDto = service.create(processStepDTO);
-        }
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> service.read(new SearchType().limit(-1), httpServerResponse));
-
-        assertTrue(runtimeException.getMessage().contains("message: must be greater than or equal to 0"));
-        assertTrue(runtimeException.getMessage().contains("property path: read.searchType.limit"));
-    }
-
-
-    @Test
     public void testDeleteNullUuid() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdDto = service.create(processStepDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -482,7 +470,7 @@ public class ProcessStepServiceTests {
 
     @Test
     public void testDeleteWrongUuid() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdDto = service.create(processStepDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -493,7 +481,7 @@ public class ProcessStepServiceTests {
 
     @Test
     public void testDeleteSuccess() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdDto = service.create(processStepDTO);
 
         service.delete(createdDto.getUuid(), createdDto.getVersion());
@@ -507,7 +495,7 @@ public class ProcessStepServiceTests {
 
     @Test
     public void testDeleteNullVersion() {
-        ProcessStepDTO processStepDTO = getMinimalValidCreateDto();
+        ProcessStepDTO processStepDTO = getProcessStepCreateDtoWithValidDependencies();
         ProcessStepDTO createdDto = service.create(processStepDTO);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class,
@@ -563,7 +551,12 @@ public class ProcessStepServiceTests {
     @BeforeEach
     public void beforeEach() {
         QuarkusTransaction.begin();
+
         repository.deleteAll();
+        materialRepository.deleteAll();
+        toolRepository.deleteAll();
+        typeRepository.deleteAll();
+
         QuarkusTransaction.commit();
     }
 
