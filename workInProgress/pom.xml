@@ -216,13 +216,13 @@
                     </execution>
 
                     <execution>
-                        <id>generate-admin-client</id>
+                        <id>admin-api</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/../resources/workInProgressOpenAPI.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/../resources/administratorOpenAPI.yaml</inputSpec>
 <!--                            <templateDirectory>../resources/templates/client</templateDirectory>-->
                             <generatorName>java</generatorName>
                             <generateApis>true</generateApis>
