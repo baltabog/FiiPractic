@@ -5,6 +5,7 @@ import com.fii.practic.mes.models.OrderStatusDTO;
 import com.fii.practic.mes.models.OrderStatusType;
 import com.fii.practic.mes.models.SearchType;
 import com.fii.practic.mes.wip.general.AbstractResource;
+import io.vertx.core.http.HttpServerResponse;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
@@ -16,12 +17,13 @@ import java.util.List;
 
 @Path("/workInProgress/orders")
 public class OrderStatusRestClient extends AbstractResource implements OrderApi {
-
     private final OrderStatusService service;
+    private final HttpServerResponse response;
 
     @Inject
-    public OrderStatusRestClient(OrderStatusService service) {
+    public OrderStatusRestClient(OrderStatusService service, HttpServerResponse response) {
         this.service = service;
+        this.response = response;
     }
 
     @Override
@@ -37,6 +39,8 @@ public class OrderStatusRestClient extends AbstractResource implements OrderApi 
     @POST
     @Path("/status/search")
     public List<OrderStatusDTO> searchOrders(@Valid SearchType searchType) {
-        return null;
+        return registerTimer("searchOrders")
+                .record(() -> service.searchOrderStatus(searchType, response));
     }
+
 }

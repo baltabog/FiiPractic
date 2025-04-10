@@ -10,6 +10,7 @@ import com.fii.practic.mes.wip.general.error.ApplicationRuntimeException;
 import com.fii.practic.mes.wip.general.error.ServerErrorEnum;
 import com.fii.practic.mes.wip.general.external.AdminClientService;
 import io.quarkus.narayana.jta.QuarkusTransaction;
+import io.vertx.core.http.HttpServerResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
@@ -104,5 +105,10 @@ public class OrderStatusService {
                 throw new ApplicationRuntimeException(ServerErrorEnum.ADMIN_SERVICE_CALL_FAILED, e.getMessage());
             }
         };
+    }
+
+    public List<OrderStatusDTO> searchOrderStatus(com.fii.practic.mes.models.SearchType searchType, HttpServerResponse response) {
+        return null; //todo implementation
+
     }
 }
