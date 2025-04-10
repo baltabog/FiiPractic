@@ -35,10 +35,9 @@ quarkus:
   hibernate-orm:
     database:
       generation: update
-  hibernate-envers:
-    audit-strategy: org.hibernate.envers.strategy.internal.ValidityAuditStrategy
-    allow-identifier-reuse: true
-    store-data-at-delete: true
+  rest-client:
+    admin-api:
+      url: http://localhost:5000
 
 "%dev":
   quarkus:

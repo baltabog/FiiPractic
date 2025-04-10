@@ -15,6 +15,7 @@ public interface OrderMapper {
     @Mapping(target = "version",            ignore = true)
     @Mapping(target = "updated",	        ignore = true)
     @Mapping(target = "updatedBy",	        ignore = true)
+    @Mapping(target = "completeQty",        constant = "0")
     OrderEntity mapToEntity(OrderDTO dto);
 
     @Mapping(target = "id",                 ignore = true)
