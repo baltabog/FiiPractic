@@ -33,5 +33,4 @@ public class ProcessPlanEntity extends AbstractEntity {
         @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "processPlan")
         @OnDelete(action = OnDeleteAction.CASCADE)
         private List<ProcessPlanStepEntity> orderedProcessSteps = new ArrayList<>();
-
 }
