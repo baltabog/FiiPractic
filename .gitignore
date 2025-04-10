@@ -1,0 +1,9 @@
+/.idea
+/**/target
+/**/.dockerignore
+/**/.openapi-generator
+/**/.openapi-generator-ignore
+/**/README.md
+/**/FILES
+/**/VERSION
+/**/*.iml

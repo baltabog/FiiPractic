@@ -48,7 +48,6 @@ quarkus:
       log:
         sql: true
         bind-parameters: true
-    datasource:
 
 "%production":
   quarkus:
