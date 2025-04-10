@@ -88,7 +88,7 @@ paths:
       x-tags:
         - tag: Order
 
-  /workInProgress/equipments/status/check:
+  /workInProgress/equipment/status/check:
     post:
       tags:
         - Equipment
@@ -118,7 +118,7 @@ paths:
       x-accepts: application/json
       x-tags:
         - tag: Equipment
-  /workInProgress/equipments/status:
+  /workInProgress/equipment/status:
     post:
       tags:
         - Equipment
@@ -188,7 +188,7 @@ paths:
       x-accepts: application/json
       x-tags:
         - tag: TimeStatistics
-  /workInProgress/statistics/time/equipments/{equipmentId}:
+  /workInProgress/statistics/time/equipment/{equipmentId}:
     post:
       tags:
         - TimeStatistics

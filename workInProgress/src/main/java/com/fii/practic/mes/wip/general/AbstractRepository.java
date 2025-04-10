@@ -6,12 +6,10 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.StaleObjectStateException;
 import org.jboss.logging.Logger;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public abstract class AbstractRepository<E extends AbstractEntity> implements PanacheRepository<E> {
@@ -34,16 +32,6 @@ public abstract class AbstractRepository<E extends AbstractEntity> implements Pa
 			logErrorQueryInfo("uuid = ?1", uuid);
 			throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR_BY_ID, entityName, uuid);
 		}
-	}
-
-	public E findMandatoryVersionedByUuid(final String uuid, final int version) {
-		final E entity = findMandatoryByUuid(uuid);
-		if (!Objects.equals(entity.getVersion(), version)) {
-			logErrorQueryInfo("uuid = ?1 and version = ?2", uuid, version);
-			throw new StaleObjectStateException(entityName, uuid);
-		}
-
-		return entity;
 	}
 
 	public Optional<E> findOneIfExist(final String query, Object... param) {
