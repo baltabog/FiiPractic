@@ -17,8 +17,10 @@ import com.fii.practic.mes.models.ProcessStepMaterialDTO;
 import com.fii.practic.mes.models.ToolDTO;
 import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -550,6 +552,16 @@ public class ProcessStepServiceTests {
 
     @BeforeEach
     public void beforeEach() {
+        cleanDb();
+    }
+
+    @AfterAll
+    @ActivateRequestContext
+    public void afterAll() {
+        cleanDb();
+    }
+
+    private void cleanDb() {
         QuarkusTransaction.begin();
 
         repository.deleteAll();

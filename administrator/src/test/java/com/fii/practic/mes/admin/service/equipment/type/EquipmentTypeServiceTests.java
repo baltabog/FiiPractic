@@ -9,9 +9,10 @@ import com.fii.practic.mes.models.SearchType;
 import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.http.HttpServerResponse;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -388,9 +389,19 @@ public class EquipmentTypeServiceTests {
         assertNotNull(actual.getUpdated(), "Wrong equipmentType.updated");
     }
 
+
     @BeforeEach
-    @BeforeAll
     public void beforeEach() {
+        cleanDb();
+    }
+
+    @AfterAll
+    @ActivateRequestContext
+    public void afterAll() {
+        cleanDb();
+    }
+
+    private void cleanDb() {
         QuarkusTransaction.begin();
         repository.deleteAll();
         QuarkusTransaction.commit();
