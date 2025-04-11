@@ -9,20 +9,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Immutable;
 
 @Entity(name = OrderStatusEntity.ENTITY_NAME)
 @Table(name = OrderStatusEntity.TABLE_NAME)
 @Getter @Setter
+@Immutable
 public class OrderStatusEntity extends AbstractEntity {
     public static final String ENTITY_NAME = "OrderStatus";
     public static final String TABLE_NAME = "T_ORDER_STATUS";
 
-    @Column(name = "ORDER_UUID", nullable = false, unique = true)
+    @Column(name = "ORDER_UUID", nullable = false)
     private String orderUuid;
 
-    @Column(name = "ORDER_NAME", nullable = false, updatable = false)
-    @NaturalId
+    @Column(name = "ORDER_NAME", nullable = false)
     private String orderName;
 
     @Column(name = "STATUS",columnDefinition = "VARCHAR(16)")
