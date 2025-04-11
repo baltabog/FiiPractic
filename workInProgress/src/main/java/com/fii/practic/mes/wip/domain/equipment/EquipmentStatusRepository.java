@@ -1,5 +1,6 @@
 package com.fii.practic.mes.wip.domain.equipment;
 
+import com.fii.practic.mes.models.EqStatusType;
 import com.fii.practic.mes.wip.general.AbstractRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -10,7 +11,9 @@ public class EquipmentStatusRepository extends AbstractRepository<EquipmentStatu
         super(EquipmentStatusEntity.class, EquipmentStatusEntity.ENTITY_NAME);
     }
 
-    public EquipmentStatusEntity getEquipmentActiveStatus(String equipmentUuid) {
-        return findOneMandatory("id = (select max(es.id) from EquipmentStatus es where uuid = ?1) ", equipmentUuid);
+    public EqStatusType getEquipmentActiveStatus(String equipmentUuid) {
+        return findOneIfExist("id = (select max(es.id) from EquipmentStatus es where es.equipmentUuid = ?1) ", equipmentUuid)
+                .map(EquipmentStatusEntity::getStatus)
+                .orElse(EqStatusType.STOPPED);
     }
 }

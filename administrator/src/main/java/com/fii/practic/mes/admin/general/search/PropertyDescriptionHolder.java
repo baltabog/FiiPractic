@@ -38,11 +38,25 @@ public final class PropertyDescriptionHolder {
     }
 
     private void registerProcessPlanDto() {
-        PROPERTY_DESCRIPTION_MAP.put("ProcessPlanDTO", getDefaultListOfProperties());
+        List<PropertyDescription> list = new ArrayList<>(getDefaultListOfProperties());
+        list.add(new PropertyDescription("orderUuid", "id", PropertyType.MULTI_VALUE_SUBQUERY,
+                (str) -> "(select pp.id from ProcessPlan pp inner join Order o on o.processPlan = pp where o.uuid = :orderUuid)",
+                true, false));
+
+        PROPERTY_DESCRIPTION_MAP.put("ProcessPlanDTO", list);
     }
 
     private void registerProcessStepDto() {
-        PROPERTY_DESCRIPTION_MAP.put("ProcessStepDTO", getDefaultListOfProperties());
+        List<PropertyDescription> list = new ArrayList<>(getDefaultListOfProperties());
+        list.add(new PropertyDescription("orderUuid", "id", PropertyType.MULTI_VALUE_SUBQUERY,
+                (str) -> "(select ELEMENTS(pp.orderedProcessSteps).processStep.id from ProcessPlan pp inner join Order o on o.processPlan = pp where o.uuid = :orderUuid)",
+                true, false));
+
+        list.add(new PropertyDescription("withEquipment", "id", PropertyType.MULTI_VALUE_SUBQUERY,
+                (str) -> "(select ps.id from ProcessStep ps where exists (select pse from ps.equipments pse where pse.uuid = :withEquipment))",
+                true, false));
+
+        PROPERTY_DESCRIPTION_MAP.put("ProcessStepDTO", list);
     }
 
     private void registerMaterialDto() {
