@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "d681725c-0e20-4473-a74b-3fef6c09d937",
+		"_postman_id": "41513f08-f136-4395-ba17-ae77091bf924",
 		"name": "FiiPractic",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28439367",
-		"_collection_link": "https://orange-zodiac-182687.postman.co/workspace/FII-Practic~864f2f56-3902-4ef9-ac01-ca84fb738d86/collection/28439367-d681725c-0e20-4473-a74b-3fef6c09d937?action=share&source=collection_link&creator=28439367"
+		"_exporter_id": "24478282",
+		"_collection_link": "https://orange-zodiac-182687.postman.co/workspace/onePULSE~48e64d8c-df9e-4436-8275-9715db8ef0af/collection/24478282-41513f08-f136-4395-ba17-ae77091bf924?action=share&source=collection_link&creator=24478282"
 	},
 	"item": [
 		{
@@ -291,7 +291,7 @@
 					"name": "materials",
 					"item": [
 						{
-							"name": "craeteMaterial",
+							"name": "createMaterial",
 							"event": [
 								{
 									"listen": "test",
@@ -326,6 +326,113 @@
 									"path": [
 										"administrator",
 										"materials"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "processPlan",
+					"item": [
+						{
+							"name": "searchByOrder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sortBy\": \"desc:name\",\r\n    \"offset\": 0,\r\n    \"limit\": 100,\r\n    \"filter\": {\r\n        \"outerOperator\": \"and\",\r\n        \"criteria\": [\r\n            {\r\n                \"propertyName\": \"orderUuid\",\r\n                \"operator\": \"eq\",\r\n                \"values\": [\"e506e9b4-a50c-4ebb-809b-55a0a3b69380\"]\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/plans/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"plans",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "processStep",
+					"item": [
+						{
+							"name": "searchByOrder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sortBy\": \"desc:name\",\r\n    \"offset\": 0,\r\n    \"limit\": 100,\r\n    \"filter\": {\r\n        \"outerOperator\": \"and\",\r\n        \"criteria\": [\r\n            {\r\n                \"propertyName\": \"orderUuid\",\r\n                \"operator\": \"in\",\r\n                \"values\": [\"e506e9b4-a50c-4ebb-809b-55a0a3b69380\"]\r\n            },\r\n            {\r\n                \"propertyName\": \"withEquipment\",\r\n                \"operator\": \"in\",\r\n                \"values\": [\"996f462f-e338-4937-aff5-77eae531f639\"]\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "orders",
+					"item": [
+						{
+							"name": "search",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/orders/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"orders",
+										"search"
 									]
 								}
 							},
