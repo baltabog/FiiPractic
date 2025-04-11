@@ -15,7 +15,6 @@ import com.fii.practic.mes.wip.general.external.AdminClientService;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,15 +32,15 @@ public class ExternalInfoProvider {
                 .filter(new FilterParamType()
                         .addCriteriaItem(new FilterParamCriteriaType()
                                 .propertyName("orderUuid")
-                                .operator(FilterParamCriteriaType.OperatorEnum.EQ)
+                                .operator(FilterParamCriteriaType.OperatorEnum.IN)
                                 .values(List.of(orderUuid)))
                         .addCriteriaItem(new FilterParamCriteriaType()
                                 .propertyName("withEquipment")
-                                .operator(FilterParamCriteriaType.OperatorEnum.EQ)
+                                .operator(FilterParamCriteriaType.OperatorEnum.IN)
                                 .values(List.of(equipmentUuid)))
                 );
 
-        List<ProcessStepDTO> processStepDTOs = Collections.emptyList();
+        List<ProcessStepDTO> processStepDTOs;
         try {
             processStepDTOs = adminClientService.getAdminProcessStepApi().searchProcessSteps(searchType);
         } catch (ApiException e) {
@@ -62,7 +61,7 @@ public class ExternalInfoProvider {
                         .operator(FilterParamCriteriaType.OperatorEnum.EQ)
                         .values(List.of(orderUuid))));
 
-        List<ProcessPlanDTO> processPlanDTOs = Collections.emptyList();
+        List<ProcessPlanDTO> processPlanDTOs;
         try {
             processPlanDTOs = adminClientService.getAdminProcessPlanApi().searchProcesses(searchType);
         } catch (ApiException e) {

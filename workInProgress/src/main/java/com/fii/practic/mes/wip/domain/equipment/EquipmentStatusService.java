@@ -47,10 +47,9 @@ public class EquipmentStatusService {
                 .orElseThrow(() -> new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR, OrderStatusEntity.ENTITY_NAME));
         ProcessStepDTO processStepDTO = getActiveOrderProcessStepContainingEquipment(activeOrder, updateEquipmentStatusRequest.getEquipment());
 
-        EquipmentStatusEntity equipmentActiveStatusEntity = equipmentStatusRepository.getEquipmentActiveStatus(
+        EqStatusType equipmentActualStatus = equipmentStatusRepository.getEquipmentActiveStatus(
                 updateEquipmentStatusRequest.getEquipment().getUuid());
-        checkIfEquipmentCanHaveNewStatus(equipmentActiveStatusEntity.getStatus(),
-                updateEquipmentStatusRequest.getInputStatus());
+        checkIfEquipmentCanHaveNewStatus(equipmentActualStatus, updateEquipmentStatusRequest.getInputStatus());
 
         if (InputEqStatusType.PROCESS_START.equals(updateEquipmentStatusRequest.getInputStatus())) {
             checkIfExistEnoughInputMaterial(processStepDTO.getInputMaterials());
@@ -68,19 +67,17 @@ public class EquipmentStatusService {
                 .orElseThrow(() -> new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR, OrderStatusEntity.ENTITY_NAME));
         ProcessStepDTO processStepDTO = getActiveOrderProcessStepContainingEquipment(activeOrder, updateEquipmentStatusRequest.getEquipment());
 
-        EquipmentStatusEntity equipmentActiveStatusEntity = equipmentStatusRepository.getEquipmentActiveStatus(
+        EqStatusType equipmentActualStatus = equipmentStatusRepository.getEquipmentActiveStatus(
                 updateEquipmentStatusRequest.getEquipment().getUuid());
-        checkIfEquipmentCanHaveNewStatus(equipmentActiveStatusEntity.getStatus(),
-                updateEquipmentStatusRequest.getInputStatus());
+        checkIfEquipmentCanHaveNewStatus(equipmentActualStatus, updateEquipmentStatusRequest.getInputStatus());
         if (InputEqStatusType.PROCESS_START.equals(updateEquipmentStatusRequest.getInputStatus())) {
             updateEquipmentInputMaterialQuantity(processStepDTO.getInputMaterials());
         } else if (InputEqStatusType.PROCESS_SUCCEED.equals(updateEquipmentStatusRequest.getInputStatus())) {
             updateEquipmentOutputMaterialQuantity(processStepDTO.getSuccessOutputMaterials());
+            updateOrderCompleteQtyQuantityIfRequired(activeOrder, processStepDTO);
         } else if (InputEqStatusType.PROCESS_FAIL.equals(updateEquipmentStatusRequest.getInputStatus())) {
             updateEquipmentOutputMaterialQuantity(processStepDTO.getFailOutputMaterials());
         }
-
-        updateOrderCompleteQtyQuantityIfRequired(activeOrder, processStepDTO);
 
         EquipmentStatusEntity equipmentNewStatusEntity = saveNewEquipmentStatus(updateEquipmentStatusRequest, activeOrder);
         response.setOrder(new IdentityDTO().name(activeOrder.getOrderName()).uuid(activeOrder.getOrderUuid()));
@@ -119,7 +116,7 @@ public class EquipmentStatusService {
         }
 
         if (EqStatusType.PROCESSING.equals(currentStatus)
-                && List.of(InputEqStatusType.PROCESS_FAIL, InputEqStatusType.PROCESS_FAIL).contains(inputEquipmentStatus)) {
+                && List.of(InputEqStatusType.PROCESS_SUCCEED, InputEqStatusType.PROCESS_FAIL).contains(inputEquipmentStatus)) {
             return;
         }
 

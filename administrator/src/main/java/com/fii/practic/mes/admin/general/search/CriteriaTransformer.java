@@ -30,20 +30,33 @@ public final class CriteriaTransformer {
         validateCriteria(criteria, dtoPropertyDescriptor);
         String entityQueriedProperty = dtoPropertyDescriptor.getHqlName();
         String operator = getOperatorString(criteria);
-        String subquery = List.of(PropertyType.SINGLE_VALUE_SUBQUERY, PropertyType.MULTI_VALUE_SUBQUERY).contains(dtoPropertyDescriptor.getHqlType())
-                ? (String) dtoPropertyDescriptor.getValueTransformer().apply("subqueryValue")
-                : StringUtils.EMPTY;
-
-        if (CollectionUtils.isNotEmpty(criteria.getValues())) {
-            params.put(criteria.getPropertyName(), CollectionUtils.size(criteria.getValues()) == 1
-                    ? criteria.getValues().get(0)
-                    : criteria.getValues());
-        }
 
         return "%s %s %s".formatted(
                 entityQueriedProperty,
                 operator,
-                subquery);
+                getConditionValueString(criteria, params, dtoPropertyDescriptor));
+    }
+
+    private static String getConditionValueString(FilterParamCriteriaType criteria,
+                                                  Map<String, Object> params,
+                                                  PropertyDescription dtoPropertyDescriptor) {
+        String conditionValue;
+
+        if (List.of(PropertyType.SINGLE_VALUE_SUBQUERY, PropertyType.MULTI_VALUE_SUBQUERY).contains(dtoPropertyDescriptor.getHqlType())) {
+            conditionValue = (String) dtoPropertyDescriptor.getValueTransformer().apply("subqueryValue");
+            if (CollectionUtils.isNotEmpty(criteria.getValues())) {
+                params.put(criteria.getPropertyName(), CollectionUtils.size(criteria.getValues()) == 1
+                        ? criteria.getValues().get(0)
+                        : criteria.getValues());
+            }
+        } else {
+            String bindVariableName = !List.of(PropertyType.SINGLE_VALUE_SUBQUERY, PropertyType.MULTI_VALUE_SUBQUERY).contains(dtoPropertyDescriptor.getHqlType())
+                    ? getBindVariableObject(criteria, params, dtoPropertyDescriptor)
+                    : StringUtils.EMPTY;
+            conditionValue = StringUtils.isNotBlank(bindVariableName) ? ":" + bindVariableName : StringUtils.EMPTY;
+        }
+
+        return conditionValue;
     }
 
     private static void validateCriteria(FilterParamCriteriaType criteria, PropertyDescription dtoPropertyDescriptor) {
