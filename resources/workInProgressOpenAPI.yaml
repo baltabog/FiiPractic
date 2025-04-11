@@ -22,6 +22,7 @@ paths:
        STARTED - plant start to work at this job. This status can be set if job have one of the statuses: ON_HOLD, PAUSED <br />
        PAUSED - plant pause work on this job. This status can be set if job have status: STARTED <br /> 
        COMPLETED - job completed, no more work on this job requested; This status can be set if job have status: STARTED <br /> 
+       <b>Note:</b> Only one job can be started at a certain moment <br />
       "
       parameters:
         - in: path
@@ -97,7 +98,7 @@ paths:
       description: "<b>Input statuses legend:</b> <br />
         STOP - set equipment in state: STOPPED; Previous equipment should be in: ON_REPAIR or WAIT_FOR_MATERIALS state; <br />
         ON_REPAIR - set equipment in state: ON_REPAIR; Previous equipment should be in: WAIT_FOR_MATERIALS state; <br />
-        START - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: STOPPED state; <br />
+        START - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: ON_REPAIR or STOPPED state; <br />
         PROCESS_START - set equipment in state: PROCESSING; Previous equipment should be in: WAIT_FOR_MATERIALS state; <br />
         PROCESS_SUCCEED - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: PROCESSING state; <br />
         PROCESS_FAIL - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: PROCESSING state; <br />
@@ -127,7 +128,7 @@ paths:
       description: "<b>Input statuses legend:</b> <br />
         STOP - set equipment in state: STOPPED; Previous equipment should be in: ON_REPAIR or WAIT_FOR_MATERIALS state; <br />
         ON_REPAIR - set equipment in state: ON_REPAIR; Previous equipment should be in: WAIT_FOR_MATERIALS state; <br />
-        START - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: STOPPED state; <br />
+        START - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: ON_REPAIR or STOPPED state; <br />
         PROCESS_START - set equipment in state: PROCESSING; Previous equipment should be in: WAIT_FOR_MATERIALS state; <br />
         PROCESS_SUCCEED - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: PROCESSING state; <br />
         PROCESS_FAIL - set equipment in state: WAIT_FOR_MATERIALS; Previous equipment should be in: PROCESSING state; <br />
@@ -253,16 +254,16 @@ components:
 
     OrderStatusDTO:
       type: object
-      required:
-        - identity
-        - status
       properties:
         identity:
           $ref: '#/components/schemas/IdentityDTO'
+          readOnly: true
         status:
           $ref: '#/components/schemas/orderStatusType'
+          readOnly: true
         lastChange:
           $ref: '#/components/schemas/updatedType'
+          readOnly: true
 
     UpdateEquipmentStatusRequest:
       type: object
@@ -281,15 +282,19 @@ components:
         - order
         - equipment
         - equipmentStatus
+        - lastChange
       properties:
-        identity:
+        order:
           $ref: '#/components/schemas/IdentityDTO'
+          readOnly: true
         equipment:
           $ref: '#/components/schemas/IdentityDTO'
+          readOnly: true
         equipmentStatus:
           $ref: '#/components/schemas/eqStatusType'
         lastChange:
           $ref: '#/components/schemas/updatedType'
+          readOnly: true
 
     StatusTimeStatisticDTO:
       type: object
@@ -320,7 +325,7 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/IdentityDTO'
+            $ref: '#/components/schemas/StatusTimeStatisticDTO'
 
     FilterParamType:
       example:

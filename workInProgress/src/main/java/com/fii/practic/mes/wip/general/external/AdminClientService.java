@@ -17,7 +17,6 @@ import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -79,8 +78,9 @@ public class AdminClientService {
         return new SearchType().filter(filterParamType);
     }
 
-    public <O extends Serializable> O getByIdentity(Function<SearchType, List<O>> searchFunction,
-                                                    IdentityDTO identityDTO, Class<O> searchedObjectType) {
+    public <O> O getByIdentity(Function<SearchType, List<O>> searchFunction,
+                               IdentityDTO identityDTO,
+                               Class<O> searchedObjectType) {
 
         List<O> objects = searchFunction.apply(getSearchTypeFromIdentity(identityDTO));
         if (CollectionUtils.size(objects) != 1) {
@@ -90,8 +90,9 @@ public class AdminClientService {
         return objects.get(0);
     }
 
-    public <O extends Serializable> List<O> getByIdentity(Function<SearchType, List<O>> searchFunction,
-                                                          List<IdentityDTO> identityDTOs, Class<O> searchedObjectType) {
+    public <O> List<O> getByIdentity(Function<SearchType, List<O>> searchFunction,
+                                     List<IdentityDTO> identityDTOs,
+                                     Class<O> searchedObjectType) {
 
         List<O> objects = searchFunction.apply(getSearchTypeFromIdentity(identityDTOs));
         if (CollectionUtils.size(objects) != CollectionUtils.size(identityDTOs)) {
