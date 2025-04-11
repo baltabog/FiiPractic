@@ -16,10 +16,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class OrderStatusService {
@@ -119,12 +121,17 @@ public class OrderStatusService {
         if (optionalOrderStatus.isPresent()) {
             return mapper.toOrderStatusDto(optionalOrderStatus.get());
         }
+        OrderDTO adminOrder = getAdminOrderByName(name);
+        return mapper.toOrderStatusDto(adminOrder, OrderStatusType.ON_HOLD);
+    }
+
+    private OrderDTO getAdminOrderByName(String name) {
         List<OrderDTO> adminOrders = adminClientService.getBySearchType(getSearchOrdersFunction(),
                 getSearchOrderByNameObject(name));
         if (adminOrders.isEmpty()) {
             throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR_NAMED, OrderStatusEntity.ENTITY_NAME, name);
         }
-        return mapper.toOrderStatusDto(adminOrders.get(0), OrderStatusType.ON_HOLD);
+        return adminOrders.get(0);
     }
 
     private SearchType getSearchOrderByNameObject(String name) {
@@ -135,5 +142,24 @@ public class OrderStatusService {
                                 .operator(FilterParamCriteriaType.OperatorEnum.EQ)
                                 .addValuesItem(name)
                 ));
+    }
+
+    public List<OrderStatusDTO> getAllOrderStatusByOrderName(@NotNull String orderName) {
+        List<OrderStatusDTO> orderStatusDtos = repository.stream("orderName = ?1 ORDER BY timestamp", orderName)
+                .map(mapper::toOrderStatusDto)
+                .collect(Collectors.toList());
+
+        OrderDTO orderDto = getAdminOrderByName(orderName);
+        OrderStatusDTO onHoldStatus = mapper.toOrderStatusDto(orderDto, OrderStatusType.ON_HOLD);
+        onHoldStatus.setTimestamp(orderDto.getUpdated());
+        orderStatusDtos.add(0, onHoldStatus);
+
+        for (int index = 0; index < orderStatusDtos.size() - 1; index++) {
+            OrderStatusDTO currentStatus = orderStatusDtos.get(index);
+            OrderStatusDTO nextStatus = orderStatusDtos.get(index + 1);
+            long secondsDuration = Duration.between(currentStatus.getTimestamp(), nextStatus.getTimestamp()).getSeconds();
+            currentStatus.setDuration(secondsDuration);
+        }
+        return orderStatusDtos;
     }
 }
