@@ -1,6 +1,8 @@
 package com.fii.practic.mes.wip.domain.equipment;
 
 import com.fii.practic.mes.admin.models.MaterialDTO;
+import com.fii.practic.mes.admin.models.OrderedProcessStepDTO;
+import com.fii.practic.mes.admin.models.ProcessPlanDTO;
 import com.fii.practic.mes.admin.models.ProcessStepDTO;
 import com.fii.practic.mes.admin.models.ProcessStepMaterialDTO;
 import com.fii.practic.mes.models.EqStatusType;
@@ -20,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -77,7 +80,7 @@ public class EquipmentStatusService {
             updateEquipmentOutputMaterialQuantity(processStepDTO.getFailOutputMaterials());
         }
 
-        updateOrderCompleteQtyQuantityIfRequired(processStepDTO);
+        updateOrderCompleteQtyQuantityIfRequired(activeOrder, processStepDTO);
 
         EquipmentStatusEntity equipmentNewStatusEntity = saveNewEquipmentStatus(updateEquipmentStatusRequest, activeOrder);
         response.setOrder(new IdentityDTO().name(activeOrder.getOrderName()).uuid(activeOrder.getOrderUuid()));
@@ -191,7 +194,19 @@ public class EquipmentStatusService {
         };
     }
 
-    private void updateOrderCompleteQtyQuantityIfRequired(ProcessStepDTO processStepDTO) {
-        // TODO: implement me
+    private void updateOrderCompleteQtyQuantityIfRequired(OrderStatusEntity activeOrder, ProcessStepDTO processStepDTO) {
+        ProcessPlanDTO orderProcessPlan = externalInfoProvider.getOrderProcessPlan(activeOrder.getOrderUuid());
+        int psIndexInPp = -1;
+        int maxPsIndexInPp = -1;
+        for (OrderedProcessStepDTO processStep : orderProcessPlan.getOrderedProcessSteps()) {
+            if (Objects.equals(processStep.getUuid(), processStepDTO.getUuid())) {
+                psIndexInPp = processStep.getOrderInProcess();
+            }
+            maxPsIndexInPp = Math.max(maxPsIndexInPp, processStep.getOrderInProcess());
+        }
+
+        if (psIndexInPp == maxPsIndexInPp) {
+            externalInfoProvider.increaseOrderCompleteQty(activeOrder.getOrderUuid());
+        }
     }
 }

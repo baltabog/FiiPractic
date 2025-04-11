@@ -33,27 +33,22 @@ public final class CriteriaTransformer {
         String subquery = List.of(PropertyType.SINGLE_VALUE_SUBQUERY, PropertyType.MULTI_VALUE_SUBQUERY).contains(dtoPropertyDescriptor.getHqlType())
                 ? (String) dtoPropertyDescriptor.getValueTransformer().apply("subqueryValue")
                 : StringUtils.EMPTY;
-        String bindVariableName = !List.of(PropertyType.SINGLE_VALUE_SUBQUERY, PropertyType.MULTI_VALUE_SUBQUERY).contains(dtoPropertyDescriptor.getHqlType())
-                ? getBindVariableObject(criteria, params, dtoPropertyDescriptor)
-                : StringUtils.EMPTY;
-        bindVariableName = StringUtils.isNotBlank(bindVariableName) ? ":" + bindVariableName : StringUtils.EMPTY;
+
+        if (CollectionUtils.isNotEmpty(criteria.getValues())) {
+            params.put(criteria.getPropertyName(), CollectionUtils.size(criteria.getValues()) == 1
+                    ? criteria.getValues().get(0)
+                    : criteria.getValues());
+        }
 
         return "%s %s %s".formatted(
                 entityQueriedProperty,
                 operator,
-                StringUtils.isNotBlank(subquery) ? subquery : bindVariableName);
+                subquery);
     }
 
     private static void validateCriteria(FilterParamCriteriaType criteria, PropertyDescription dtoPropertyDescriptor) {
         if (!dtoPropertyDescriptor.isFilterable()) {
             throw new ApplicationRuntimeException(ServerErrorEnum.QUERY_INVALID_FILTER, criteria.getPropertyName());
-        }
-
-        if (List.of(PropertyType.SINGLE_VALUE_SUBQUERY, PropertyType.MULTI_VALUE_SUBQUERY).contains(dtoPropertyDescriptor.getHqlType())) {
-            if (CollectionUtils.isNotEmpty(criteria.getValues())) {
-                throw new ApplicationRuntimeException(ServerErrorEnum.QUERY_INVALID_FILTER, criteria.getPropertyName());
-            }
-            return;
         }
 
         if (isNoValueOperator(criteria.getOperator())) {
