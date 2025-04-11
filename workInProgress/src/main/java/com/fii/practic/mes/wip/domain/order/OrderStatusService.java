@@ -47,8 +47,9 @@ public class OrderStatusService {
 
         QuarkusTransaction.begin();
 
-        Optional<OrderStatusEntity> optionalOrderStatusEntity = repository.findByUuid(orderUuid);
-        OrderStatusType orderOldStatus = optionalOrderStatusEntity.map(OrderStatusEntity::getStatus)
+        Optional<OrderStatusEntity> optionalLastOrderStatus = repository.find("orderUuid = ?1 order by timestamp desc", orderUuid)
+                .firstResultOptional();
+        OrderStatusType orderOldStatus = optionalLastOrderStatus.map(OrderStatusEntity::getStatus)
                 .orElse(null);
 
         checkStateTransition(orderOldStatus, newStatus);
@@ -59,7 +60,7 @@ public class OrderStatusService {
     }
 
     private OrderStatusEntity createNewOrderStatusEntity(OrderDTO orderDTO, OrderStatusType newStatus) {
-        checkStartedOrderExists();
+        checkOtherStartedOrderExists(orderDTO.getName());
 
         OrderStatusEntity newOrderStatus = mapper.getNewOrderStatus(orderDTO, newStatus);
         repository.persist(newOrderStatus);
@@ -67,10 +68,10 @@ public class OrderStatusService {
         return newOrderStatus;
     }
 
-    private void checkStartedOrderExists() {
+    private void checkOtherStartedOrderExists(String referenceOrderName) {
         Optional<OrderStatusEntity> optionalStartedOrder = repository.stream("status", OrderStatusType.STARTED)
                 .findAny();
-        if (optionalStartedOrder.isPresent()) {
+        if (optionalStartedOrder.isPresent() && !optionalStartedOrder.get().getOrderName().equals(referenceOrderName)) {
             throw new ApplicationRuntimeException(ServerErrorEnum.ORDER_ALREADY_STARTED, optionalStartedOrder.get().getOrderName());
         }
     }
@@ -84,7 +85,7 @@ public class OrderStatusService {
         }
         switch (oldStatus) {
             case STARTED -> {
-                if ((Set.of(OrderStatusType.COMPLETED, OrderStatusType.PAUSED).contains(newStatus))) {
+                if (!(Set.of(OrderStatusType.COMPLETED, OrderStatusType.PAUSED).contains(newStatus))) {
                     throw getStatusTransitionException(oldStatus, newStatus);
                 }
             }
