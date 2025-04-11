@@ -46,24 +46,19 @@ public class OrderStatusService {
                 OrderDTO.class);
 
         QuarkusTransaction.begin();
-        Optional<OrderStatusEntity> optionalOrderStatusEntity = repository.findByUuid(orderUuid);
 
-        if (optionalOrderStatusEntity.isPresent()) {
-            OrderStatusEntity orderStatusEntity = addNewStateForTrackedOrder(orderDTO, optionalOrderStatusEntity.get().getStatus(), newStatus);
-            QuarkusTransaction.commit();
-            return mapper.toOrderStatusDto(orderStatusEntity);
-        } else {
-            if (!newStatus.equals(OrderStatusType.STARTED)) {
-                throw new ApplicationRuntimeException(ServerErrorEnum.WRONG_FIRST_ORDER_STATUS, orderDTO.getName());
-            }
-            OrderStatusEntity newOrderStatusEntity = createNewOrderStatusEntity(orderDTO, OrderStatusType.STARTED);
-            QuarkusTransaction.commit();
-            return mapper.toOrderStatusDto(newOrderStatusEntity);
-        }
+        Optional<OrderStatusEntity> optionalOrderStatusEntity = repository.findByUuid(orderUuid);
+        OrderStatusType orderOldStatus = optionalOrderStatusEntity.map(OrderStatusEntity::getStatus)
+                .orElse(null);
+
+        checkStateTransition(orderOldStatus, newStatus);
+        OrderStatusEntity orderStatusEntity = createNewOrderStatusEntity(orderDTO, newStatus);
+
+        QuarkusTransaction.commit();
+        return mapper.toOrderStatusDto(orderStatusEntity);
     }
 
     private OrderStatusEntity createNewOrderStatusEntity(OrderDTO orderDTO, OrderStatusType newStatus) {
-
         checkStartedOrderExists();
 
         OrderStatusEntity newOrderStatus = mapper.getNewOrderStatus(orderDTO, newStatus);
@@ -80,13 +75,13 @@ public class OrderStatusService {
         }
     }
 
-    private OrderStatusEntity addNewStateForTrackedOrder(OrderDTO orderDTO, OrderStatusType oldStatus, OrderStatusType newStatus) {
-        checkStateTransition(oldStatus, newStatus);
-
-        return createNewOrderStatusEntity(orderDTO, newStatus);
-    }
-
     private void checkStateTransition(OrderStatusType oldStatus, OrderStatusType newStatus) {
+        if (oldStatus == null) {
+            if (!newStatus.equals(OrderStatusType.STARTED)) {
+                throw new ApplicationRuntimeException(ServerErrorEnum.WRONG_FIRST_ORDER_STATUS);
+            }
+            return;
+        }
         switch (oldStatus) {
             case STARTED -> {
                 if ((Set.of(OrderStatusType.COMPLETED, OrderStatusType.PAUSED).contains(newStatus))) {
@@ -118,14 +113,14 @@ public class OrderStatusService {
     }
 
     public OrderStatusDTO getOrderStatusByName(String name) {
-        Optional<OrderStatusEntity> optionalOrderStatus = repository.findOneIfExist("orderName", name);
+        Optional<OrderStatusEntity> optionalOrderStatus = repository.find("orderName = ?1 ORDER BY timestamp DESC", name)
+                .firstResultOptional();
 
         if (optionalOrderStatus.isPresent()) {
             return mapper.toOrderStatusDto(optionalOrderStatus.get());
         }
         List<OrderDTO> adminOrders = adminClientService.getBySearchType(getSearchOrdersFunction(),
                 getSearchOrderByNameObject(name));
-
         if (adminOrders.isEmpty()) {
             throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR_NAMED, OrderStatusEntity.ENTITY_NAME, name);
         }

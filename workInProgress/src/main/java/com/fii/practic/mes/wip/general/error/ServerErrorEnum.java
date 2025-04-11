@@ -39,7 +39,7 @@ public enum ServerErrorEnum {
 	ADMIN_SERVICE_CALL_FAILED(500, "Admin server request failed: <%s>", Constants.MESSAGE),
 	NEW_ORDER_STATUS_NOT_PERMITTED(400, "Order status can not be changed to <%s>", Constants.PROPERTY_NAME),
 	ORDER_STATUS_TRANSITION_NOT_PERMITTED(400, "Can not change order status from <%s> to <%s>", Constants.PROPERTY_NAME, Constants.PROPERTY_NAME),
-	WRONG_FIRST_ORDER_STATUS(400, "Order <%s> is on hold, and does not accept a state other than <STARTED>", Constants.PROPERTY_NAME),
+	WRONG_FIRST_ORDER_STATUS(400, "Order is on hold, and does not accept a state other than <STARTED>", Constants.PROPERTY_NAME),
 	ORDER_ALREADY_STARTED(400,"Order named <%s> is started; it needs to be completed or paused before starting another one", Constants.PROPERTY_NAME);
 
 	@Getter
