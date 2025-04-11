@@ -72,13 +72,13 @@ public class AdminClientService {
         return searchFunction.apply(searchType);
     }
 
-    public <O> O getByName(Function<SearchType, List<O>> searchFunction, String orderName, Class<O> searchedObjectType) {
+    public <O> O getByName(Function<SearchType, List<O>> searchFunction, String objectName, Class<O> searchedObjectType) {
         SearchType searchType = new SearchType()
                 .filter(new FilterParamType()
                         .addCriteriaItem(new FilterParamCriteriaType()
                                 .propertyName("name")
                                 .operator(FilterParamCriteriaType.OperatorEnum.EQ)
-                                .values(List.of(orderName))));
+                                .values(List.of(objectName))));
 
         List<O> dtos = searchFunction.apply(searchType);
 

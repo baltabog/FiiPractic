@@ -2,10 +2,13 @@ package com.fii.practic.mes.wip.domain.statistics;
 
 import com.fii.practic.mes.admin.api.ApiException;
 import com.fii.practic.mes.admin.models.OrderDTO;
+import com.fii.practic.mes.admin.models.ToolDTO;
+import com.fii.practic.mes.models.EqStatusType;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.OrderStatusType;
 import com.fii.practic.mes.models.StatusTimeStatisticDTO;
 import com.fii.practic.mes.models.TimeStatisticDTO;
+import com.fii.practic.mes.wip.domain.equipment.EquipmentStatusEntity;
 import com.fii.practic.mes.wip.domain.equipment.EquipmentStatusRepository;
 import com.fii.practic.mes.wip.domain.order.OrderStatusEntity;
 import com.fii.practic.mes.wip.domain.order.OrderStatusRepository;
@@ -56,7 +59,7 @@ public class StatisticsService {
         timeStatisticDTO.setInterrogationItem(new IdentityDTO()
                 .name(orderStatusEntity.getOrderName())
                 .uuid(orderStatusEntity.getOrderUuid()));
-        timeStatisticDTO.timeStatistics(getStatusTimeStatistics(orderStatusEntities));
+        timeStatisticDTO.timeStatistics(getOrderTimeStatistics(orderStatusEntities));
 
         return timeStatisticDTO;
     }
@@ -86,7 +89,7 @@ public class StatisticsService {
         return timeStatisticDTO;
     }
 
-    private List<StatusTimeStatisticDTO> getStatusTimeStatistics(List<OrderStatusEntity> orderStatusEntities) {
+    private List<StatusTimeStatisticDTO> getOrderTimeStatistics(List<OrderStatusEntity> orderStatusEntities) {
         Map<OrderStatusType, StatusTimeStatisticDTO> statisticMap = Map.of(
                 OrderStatusType.STARTED, getDefaultStatusTimeStatisticForStatus(OrderStatusType.STARTED.name()),
                 OrderStatusType.PAUSED, getDefaultStatusTimeStatisticForStatus(OrderStatusType.PAUSED.name()),
@@ -114,8 +117,69 @@ public class StatisticsService {
      * @return equipment time statistics for each status
      */
     public TimeStatisticDTO getEquipmentStatistics(@NotNull String equipmentName) {
-        // This will be implemented during FiiPractic 3rd meeting
-        return new TimeStatisticDTO();
+        TimeStatisticDTO timeStatisticDTO = new TimeStatisticDTO();
+
+        List<EquipmentStatusEntity> equipmentStatuses = equipmentStatusRepository.list(
+                "equipmentName = ?1 order by timestamp asc", equipmentName);
+        if (CollectionUtils.isEmpty(equipmentStatuses)) {
+            return getTimeStatisticForUnusedEquipmentDTO(equipmentName, timeStatisticDTO);
+        }
+
+        EquipmentStatusEntity equipmentStatusEntity = equipmentStatuses.get(0);
+        timeStatisticDTO.setInterrogationItem(new IdentityDTO()
+                .name(equipmentStatusEntity.getEquipmentName())
+                .uuid(equipmentStatusEntity.getEquipmentUuid()));
+        timeStatisticDTO.timeStatistics(getEquipmentTimeStatistics(equipmentStatuses));
+
+        return timeStatisticDTO;
+    }
+
+    private TimeStatisticDTO getTimeStatisticForUnusedEquipmentDTO(String equipmentName, TimeStatisticDTO timeStatisticDTO) {
+        ToolDTO toolDTO = adminClientService.getByName(
+                searchType -> {
+                    try {
+                        return adminClientService.getAdminEquipmentApi().searchTools(searchType);
+                    } catch (ApiException e) {
+                        throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR, "ToolDTO");
+                    }
+                },
+                equipmentName, ToolDTO.class);
+
+        timeStatisticDTO.setInterrogationItem(new IdentityDTO()
+                .name(toolDTO.getName())
+                .uuid(toolDTO.getUuid()));
+
+        timeStatisticDTO.setTimeStatistics(List.of(new StatusTimeStatisticDTO()
+                .status(EqStatusType.STOPPED.name())
+                .totalTime(0L)
+                .shortestPeriod(0L)
+                .longestPeriod(0L)));
+
+        return timeStatisticDTO;
+    }
+
+    private List<StatusTimeStatisticDTO> getEquipmentTimeStatistics(List<EquipmentStatusEntity> equipmentStatuses) {
+        Map<EqStatusType, StatusTimeStatisticDTO> statisticMap = Map.of(
+                EqStatusType.STOPPED, getDefaultStatusTimeStatisticForStatus(EqStatusType.STOPPED.name()),
+                EqStatusType.ON_REPAIR, getDefaultStatusTimeStatisticForStatus(EqStatusType.ON_REPAIR.name()),
+                EqStatusType.WAIT_FOR_MATERIALS, getDefaultStatusTimeStatisticForStatus(EqStatusType.WAIT_FOR_MATERIALS.name()),
+                EqStatusType.PROCESSING, getDefaultStatusTimeStatisticForStatus(EqStatusType.PROCESSING.name())
+        );
+
+        for (int idx = 0; idx < equipmentStatuses.size() - 1; ++idx) {
+            EquipmentStatusEntity currentEqStatusEntity = equipmentStatuses.get(idx);
+            StatusTimeStatisticDTO statisticForCurrentEqStatus = statisticMap.get(currentEqStatusEntity.getStatus());
+            long durationMs = ChronoUnit.MILLIS.between(currentEqStatusEntity.getTimestamp(),
+                    equipmentStatuses.get(idx + 1).getTimestamp());
+
+            statisticForCurrentEqStatus.setTotalTime(statisticForCurrentEqStatus.getTotalTime() + durationMs);
+            statisticForCurrentEqStatus.setLongestPeriod(Math.max(statisticForCurrentEqStatus.getLongestPeriod(), durationMs));
+            statisticForCurrentEqStatus.setShortestPeriod(
+                    statisticForCurrentEqStatus.getShortestPeriod() == 0L ? durationMs
+                            : Math.min(statisticForCurrentEqStatus.getShortestPeriod(), durationMs));
+        }
+
+        return new ArrayList<>(statisticMap.values());
     }
 
     private StatusTimeStatisticDTO getDefaultStatusTimeStatisticForStatus(String status) {
