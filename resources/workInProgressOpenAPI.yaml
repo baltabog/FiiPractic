@@ -152,22 +152,22 @@ paths:
       x-tags:
         - tag: Equipment
 
-  /workInProgress/statistics/time/orders/{orderId}:
-    post:
+  /workInProgress/statistics/time/orders/{name}:
+    get:
       tags:
         - TimeStatistics
-      operationId: createOrderTimeStatistics
+      operationId: getOrderTimeStatistics
       summary: "Calculate time statistics for an order"
       description: "<b>Flow</b><br />
         - select order
-        - check over order statuses and create statistic by states: ON_HOLD, STARTED, PAUSED, COMPLETED"
+        - check over order statuses and get statistic by states: ON_HOLD, STARTED, PAUSED, COMPLETED"
       parameters:
         - in: path
-          name: orderId
+          name: name
           schema:
-            $ref: '#/components/schemas/uuidType'
+            $ref: '#/components/schemas/nameType'
           required: true
-          description: Order id
+          description: Order name
       responses:
         "200":
           description: OK - Get TimeStatisticDTO for order
@@ -180,14 +180,14 @@ paths:
       x-tags:
         - tag: TimeStatistics
   /workInProgress/statistics/time/equipment/{equipmentId}:
-    post:
+    get:
       tags:
         - TimeStatistics
-      operationId: createEquipmentTimeStatistics
+      operationId: getEquipmentTimeStatistics
       summary: "Calculate time statistics for an order"
       description: "<b>Flow</b><br />
         - select order
-        - check over order statuses and create statistic by states: STOPPED, ON_REPAIR, WAIT_FOR_MATERIALS, PROCESSING"
+        - check over order statuses and get statistic by states: STOPPED, ON_REPAIR, WAIT_FOR_MATERIALS, PROCESSING"
       parameters:
         - in: path
           name: equipmentId
@@ -230,6 +230,11 @@ components:
     eqStatusType:
       type: string
       enum: [STOPPED, ON_REPAIR, WAIT_FOR_MATERIALS, PROCESSING]
+    durationInSecondsType:
+      type: integer
+      format: int64
+      minimum: 0
+      readOnly: true
 
     IdentityDTO:
       type: object
@@ -251,9 +256,11 @@ components:
         status:
           $ref: '#/components/schemas/orderStatusType'
           readOnly: true
-        lastChange:
+        timestamp:
           $ref: '#/components/schemas/updatedType'
           readOnly: true
+        duration:
+          $ref: '#/components/schemas/durationInSecondsType'
 
     UpdateEquipmentStatusRequest:
       type: object
@@ -293,17 +300,11 @@ components:
           type: string
           readOnly: true
         totalTime:
-          type: integer
-          minimum: 0
-          readOnly: true
+          $ref: '#/components/schemas/durationInSecondsType'
         longestPeriod:
-          type: integer
-          minimum: 0
-          readOnly: true
+          $ref: '#/components/schemas/durationInSecondsType'
         shortestPeriod:
-          type: integer
-          minimum: 0
-          readOnly: true
+          $ref: '#/components/schemas/durationInSecondsType'
 
     TimeStatisticDTO:
       type: object

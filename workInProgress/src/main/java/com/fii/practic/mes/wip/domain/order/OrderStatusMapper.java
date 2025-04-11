@@ -22,6 +22,6 @@ public interface OrderStatusMapper {
 
     @Mapping(target = "identity.uuid",  source = "orderUuid")
     @Mapping(target = "identity.name",  source = "orderName")
-    @Mapping(target = "lastChange",     expression = "java(entity.getTimestamp().atOffset(java.time.OffsetDateTime.now().getOffset()))")
+    @Mapping(target = "timestamp",     expression = "java(entity.getTimestamp().atOffset(java.time.OffsetDateTime.now().getOffset()))")
     OrderStatusDTO toOrderStatusDto(OrderStatusEntity entity);
 }
