@@ -79,8 +79,7 @@ public class AdminClientService {
     }
 
     public <O> O getByIdentity(Function<SearchType, List<O>> searchFunction,
-                               IdentityDTO identityDTO,
-                               Class<O> searchedObjectType) {
+                                                    IdentityDTO identityDTO, Class<O> searchedObjectType) {
 
         List<O> objects = searchFunction.apply(getSearchTypeFromIdentity(identityDTO));
         if (CollectionUtils.size(objects) != 1) {
@@ -91,8 +90,7 @@ public class AdminClientService {
     }
 
     public <O> List<O> getByIdentity(Function<SearchType, List<O>> searchFunction,
-                                     List<IdentityDTO> identityDTOs,
-                                     Class<O> searchedObjectType) {
+                                                          List<IdentityDTO> identityDTOs, Class<O> searchedObjectType) {
 
         List<O> objects = searchFunction.apply(getSearchTypeFromIdentity(identityDTOs));
         if (CollectionUtils.size(objects) != CollectionUtils.size(identityDTOs)) {
@@ -100,5 +98,10 @@ public class AdminClientService {
         }
 
         return objects;
+    }
+
+    public <O> List<O> getBySearchType(Function<SearchType, List<O>> searchFunction,
+                                 SearchType searchType) {
+        return searchFunction.apply(searchType);
     }
 }
