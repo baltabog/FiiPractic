@@ -179,7 +179,7 @@ paths:
       x-accepts: application/json
       x-tags:
         - tag: TimeStatistics
-  /workInProgress/statistics/time/equipment/{equipmentId}:
+  /workInProgress/statistics/time/equipment/{equipmentName}:
     get:
       tags:
         - TimeStatistics
@@ -190,11 +190,11 @@ paths:
         - check over order statuses and get statistic by states: STOPPED, ON_REPAIR, WAIT_FOR_MATERIALS, PROCESSING"
       parameters:
         - in: path
-          name: equipmentId
+          name: equipmentName
           schema:
-            $ref: '#/components/schemas/uuidType'
+            $ref: '#/components/schemas/nameType'
           required: true
-          description: Equipment id
+          description: Equipment name
       responses:
         "200":
           description: OK - Get TimeStatisticDTO for equipment

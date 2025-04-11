@@ -17,11 +17,8 @@ import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Getter
@@ -59,25 +56,6 @@ public class AdminClientService {
         return new SearchType().filter(filterParamType);
     }
 
-    public SearchType getSearchTypeFromIdentity(List<IdentityDTO> identities) {
-        FilterParamType filterParamType = new FilterParamType();
-        if (CollectionUtils.isNotEmpty(identities)) {
-            if (identities.size() == 1) {
-                filterParamType.addCriteriaItem(getFilterCriteriaFromIdentity(identities.get(0)));
-            } else {
-                Set<String> identityUuids = identities.stream()
-                        .map(IdentityDTO::getUuid)
-                        .collect(Collectors.toSet());
-                filterParamType.addCriteriaItem(new FilterParamCriteriaType()
-                        .propertyName("uuid")
-                        .operator(FilterParamCriteriaType.OperatorEnum.IN)
-                        .values(new ArrayList<>(identityUuids)));
-            }
-        }
-
-        return new SearchType().filter(filterParamType);
-    }
-
     public <O> O getByIdentity(Function<SearchType, List<O>> searchFunction,
                                IdentityDTO identityDTO, Class<O> searchedObjectType) {
 
@@ -89,19 +67,25 @@ public class AdminClientService {
         return objects.get(0);
     }
 
-    public <O> List<O> getByIdentity(Function<SearchType, List<O>> searchFunction,
-                                     List<IdentityDTO> identityDTOs, Class<O> searchedObjectType) {
-
-        List<O> objects = searchFunction.apply(getSearchTypeFromIdentity(identityDTOs));
-        if (CollectionUtils.size(objects) != CollectionUtils.size(identityDTOs)) {
-            throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR, searchedObjectType.getSimpleName());
-        }
-
-        return objects;
-    }
-
     public <O> List<O> getBySearchType(Function<SearchType, List<O>> searchFunction,
                                        SearchType searchType) {
         return searchFunction.apply(searchType);
+    }
+
+    public <O> O getByName(Function<SearchType, List<O>> searchFunction, String orderName, Class<O> searchedObjectType) {
+        SearchType searchType = new SearchType()
+                .filter(new FilterParamType()
+                        .addCriteriaItem(new FilterParamCriteriaType()
+                                .propertyName("name")
+                                .operator(FilterParamCriteriaType.OperatorEnum.EQ)
+                                .values(List.of(orderName))));
+
+        List<O> dtos = searchFunction.apply(searchType);
+
+        if (CollectionUtils.size(dtos) != 1) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR, searchedObjectType.getSimpleName());
+        }
+
+        return dtos.get(0);
     }
 }
