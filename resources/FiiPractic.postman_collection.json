@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "41513f08-f136-4395-ba17-ae77091bf924",
+		"_postman_id": "6a99f405-1ddc-4937-83ec-b15a220056f9",
 		"name": "FiiPractic",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24478282",
-		"_collection_link": "https://orange-zodiac-182687.postman.co/workspace/onePULSE~48e64d8c-df9e-4436-8275-9715db8ef0af/collection/24478282-41513f08-f136-4395-ba17-ae77091bf924?action=share&source=collection_link&creator=24478282"
+		"_exporter_id": "42738691"
 	},
 	"item": [
 		{
@@ -2645,7 +2644,31 @@
 				},
 				{
 					"name": "getStatistics",
-					"item": []
+					"item": [
+						{
+							"name": "getOrderStatistic",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/statistics/time/orders/{{order.o1Boards3.name}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"statistics",
+										"time",
+										"orders",
+										"{{order.o1Boards3.name}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
