@@ -1,6 +1,7 @@
 package com.fii.practic.mes.wip.domain.equipment;
 
 import com.fii.practic.mes.admin.models.MaterialDTO;
+import com.fii.practic.mes.admin.models.OrderDTO;
 import com.fii.practic.mes.admin.models.OrderedProcessStepDTO;
 import com.fii.practic.mes.admin.models.ProcessPlanDTO;
 import com.fii.practic.mes.admin.models.ProcessStepDTO;
@@ -8,6 +9,7 @@ import com.fii.practic.mes.admin.models.ProcessStepMaterialDTO;
 import com.fii.practic.mes.models.EqStatusType;
 import com.fii.practic.mes.models.IdentityDTO;
 import com.fii.practic.mes.models.InputEqStatusType;
+import com.fii.practic.mes.models.OrderStatusType;
 import com.fii.practic.mes.models.UpdateEquipmentStatusRequest;
 import com.fii.practic.mes.models.UpdateEquipmentStatusResponse;
 import com.fii.practic.mes.wip.domain.order.OrderStatusEntity;
@@ -204,6 +206,11 @@ public class EquipmentStatusService {
 
         if (psIndexInPp == maxPsIndexInPp) {
             externalInfoProvider.increaseOrderCompleteQty(activeOrder.getOrderUuid());
+            OrderDTO orderDTO = externalInfoProvider.getOrderInfo(activeOrder.getOrderUuid());
+            if (Objects.equals(orderDTO.getCompleteQty(), orderDTO.getQuantity())) {
+                activeOrder.setStatus(OrderStatusType.COMPLETED);
+                orderStatusRepository.persist(activeOrder);
+            }
         }
     }
 }
