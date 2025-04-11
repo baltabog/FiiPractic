@@ -1,6 +1,8 @@
 package com.fii.practic.mes.wip.domain.order;
 
 import com.fii.practic.mes.admin.api.ApiException;
+import com.fii.practic.mes.admin.models.FilterParamCriteriaType;
+import com.fii.practic.mes.admin.models.FilterParamType;
 import com.fii.practic.mes.admin.models.IdentityDTO;
 import com.fii.practic.mes.admin.models.OrderDTO;
 import com.fii.practic.mes.admin.models.SearchType;
@@ -10,7 +12,6 @@ import com.fii.practic.mes.wip.general.error.ApplicationRuntimeException;
 import com.fii.practic.mes.wip.general.error.ServerErrorEnum;
 import com.fii.practic.mes.wip.general.external.AdminClientService;
 import io.quarkus.narayana.jta.QuarkusTransaction;
-import io.vertx.core.http.HttpServerResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
@@ -107,8 +108,28 @@ public class OrderStatusService {
         };
     }
 
-    public List<OrderStatusDTO> searchOrderStatus(com.fii.practic.mes.models.SearchType searchType, HttpServerResponse response) {
-        return null; //todo implementation
+    public OrderStatusDTO getOrderStatusByName(String name) {
+        Optional<OrderStatusEntity> optionalOrderStatus = repository.findOneIfExist("orderName", name);
 
+        if (optionalOrderStatus.isPresent()) {
+            return mapper.toOrderStatusDto(optionalOrderStatus.get());
+        }
+        List<OrderDTO> adminOrders = adminClientService.getBySearchType(getSearchOrdersFunction(),
+                getSearchOrderByNameObject(name));
+
+        if (adminOrders.isEmpty()) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.FIND_ERROR_NAMED, OrderStatusEntity.ENTITY_NAME, name);
+        }
+        return mapper.toOrderStatusDto(adminOrders.get(0), OrderStatusType.ON_HOLD);
+    }
+
+    private SearchType getSearchOrderByNameObject(String name) {
+        return new SearchType().filter(
+                new FilterParamType().addCriteriaItem(
+                        new FilterParamCriteriaType()
+                                .propertyName("name")
+                                .operator(FilterParamCriteriaType.OperatorEnum.EQ)
+                                .addValuesItem(name)
+                ));
     }
 }

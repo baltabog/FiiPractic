@@ -19,4 +19,8 @@ public interface OrderStatusMapper {
     @Mapping(target = "identity.name",  source = "name")
     @Mapping(target = "status",         expression = "java( status )")
     OrderStatusDTO toOrderStatusDto(OrderDTO orderDTO, @Context OrderStatusType status);
+
+    @Mapping(target = "identity.uuid",  source = "orderUuid")
+    @Mapping(target = "identity.name",  source = "orderName")
+    OrderStatusDTO toOrderStatusDto(OrderStatusEntity orderStatusEntity);
 }

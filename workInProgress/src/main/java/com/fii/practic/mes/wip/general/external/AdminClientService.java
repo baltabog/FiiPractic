@@ -99,4 +99,9 @@ public class AdminClientService {
 
         return objects;
     }
+
+    public <O> List<O> getBySearchType(Function<SearchType, List<O>> searchFunction,
+                                 SearchType searchType) {
+        return searchFunction.apply(searchType);
+    }
 }
