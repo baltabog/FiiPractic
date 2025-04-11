@@ -36,11 +36,17 @@ public enum ServerErrorEnum {
 	QUERY_INVALID_FILTER_LOGICAL_OPERATOR_WITH_VALUES(400, "Invalid query filter <%s>. Logical operator doesn't accept values.", Constants.PROPERTY_NAME),
 	QUERY_INVALID_FILTER_UNARY_OPERATOR_MULTI_VALUES(400, "Invalid query filter <%s>. Multiple values found for unary operator.", Constants.PROPERTY_NAME),
 	QUERY_INVALID_FILTER_MULTI_OPERATOR_NO_VALUES(400, "Invalid query filter <%s>. No values found for multi operator.", Constants.PROPERTY_NAME),
-	ADMIN_SERVICE_CALL_FAILED(500, "Admin server request failed: <%s>", Constants.MESSAGE),
-	NEW_ORDER_STATUS_NOT_PERMITTED(400, "Order status can not be changed to <%s>", Constants.PROPERTY_NAME),
-	ORDER_STATUS_TRANSITION_NOT_PERMITTED(400, "Can not change order status from <%s> to <%s>", Constants.PROPERTY_NAME, Constants.PROPERTY_NAME),
-	WRONG_FIRST_ORDER_STATUS(400, "Order <%s> is on hold, and does not accept a state other than <STARTED>", Constants.PROPERTY_NAME),
-	ORDER_ALREADY_STARTED(400,"Order named <%s> is started; it needs to be completed or paused before starting another one", Constants.PROPERTY_NAME);
+
+    ADMIN_SERVICE_CALL_FAILED(500, "Admin server request failed: <%s>", Constants.MESSAGE),
+    NEW_ORDER_STATUS_NOT_PERMITTED(400, "Order status can not be changed to <%s>", Constants.PROPERTY_NAME),
+    ORDER_STATUS_TRANSITION_NOT_PERMITTED(400, "Can not change order status from <%s> to <%s>", Constants.PROPERTY_NAME, Constants.PROPERTY_NAME),
+    WRONG_FIRST_ORDER_STATUS(400, "Order <%s> is on hold, and does not accept a state other than <STARTED>", Constants.PROPERTY_NAME),
+    ORDER_ALREADY_STARTED(400,"Order named <%s> is started; it needs to be completed or paused before starting another one", Constants.PROPERTY_NAME),
+    EQUIPMENT_STATUS_INCOMPATIBLE_WITH_NEW_STATUS(400, "Equipment current status is not compatible with new <%s> status", Constants.STATUS),
+    EQUIPMENT_PROCESS_CAN_NOT_BE_STARTED_INPUT_MATERIAL_QUANTITY_NOT_ENOUGH(400, "Equipment process can not be started. Input material <%s> quantity not satisfied!", Constants.MATERIAL),
+    EQUIPMENT_IS_NOT_PART_OF_ACTIVE_ORDER(400, "Equipment <%s> isn't part of active job", Constants.EQUIPMENT),
+
+    ;
 
 	@Getter
     private final int code;
@@ -62,6 +68,9 @@ public enum ServerErrorEnum {
 		public static final String FIELD_NAME = "field_name";
 		public static final String PROPERTY_NAME = "propertyName";
 		public static final String MESSAGE = "message";
-		public static final String OBJECT = "object";
+		public static final String OBJECT = "objectName";
+		public static final String STATUS = "status";
+		public static final String MATERIAL =  "materialName";
+		public static final String EQUIPMENT = "equipmentName";
 	}
 }

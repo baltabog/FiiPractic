@@ -63,7 +63,7 @@ public abstract class AbstractCRUDService<D extends Serializable, E extends Abst
     }
     protected E createEntityFromDto(D dto, CreateArtificialDto createArtificialDto) {
         getRepository().findOneIfExist("name = ?1", createArtificialDto.getName())
-                .ifPresent((e) -> { throw new ApplicationRuntimeException(ServerErrorEnum.FK_NAME_ALREADY_IN_USE); });
+                .ifPresent(e -> { throw new ApplicationRuntimeException(ServerErrorEnum.FK_NAME_ALREADY_IN_USE); });
 
         E entity = mapToEntity(dto);
         if (StringUtils.isEmpty(entity.getUuid())) {
@@ -139,7 +139,7 @@ public abstract class AbstractCRUDService<D extends Serializable, E extends Abst
                 throw new ApplicationRuntimeException(ServerErrorEnum.UPDATE_NAME_NOT_ALLOWED, getDtoName());
             }
             getRepository().findOneIfExist("name = ?1", updateArtificialDto.getName())
-                    .ifPresent((e) -> { throw new ApplicationRuntimeException(ServerErrorEnum.FK_NAME_ALREADY_IN_USE); });
+                    .ifPresent(e -> { throw new ApplicationRuntimeException(ServerErrorEnum.FK_NAME_ALREADY_IN_USE); });
         }
         entity = mapToEntity(entity, dto);
         entity.setUpdatedBy(getUpdatedBy());
