@@ -47,24 +47,35 @@ public class OrderStatusService {
 
         Optional<OrderStatusEntity> optionalOrderStatusEntity = repository.findByUuid(orderUuid);
 
-        optionalOrderStatusEntity.ifPresentOrElse(
-                orderStatusEntity -> changeStatusOnExistingEntity(orderStatusEntity, newStatus),
-                () -> createNewOrderStatusEntity(orderDTO, newStatus)
-        );
-
-        return mapper.toOrderStatusDto(orderDTO, newStatus);
+        if (optionalOrderStatusEntity.isPresent()) {
+            changeStatusOnExistingEntity(optionalOrderStatusEntity.get(), newStatus);
+            return mapper.toOrderStatusDto(optionalOrderStatusEntity.get());
+        } else {
+            OrderStatusEntity newOrderStatusEntity = createNewOrderStatusEntity(orderDTO, newStatus);
+            return mapper.toOrderStatusDto(newOrderStatusEntity);
+        }
     }
 
-    private void createNewOrderStatusEntity(OrderDTO orderDTO, OrderStatusType newStatus) {
+    private OrderStatusEntity createNewOrderStatusEntity(OrderDTO orderDTO, OrderStatusType newStatus) {
         if (!newStatus.equals(OrderStatusType.STARTED)) {
             throw new ApplicationRuntimeException(ServerErrorEnum.WRONG_FIRST_ORDER_STATUS, orderDTO.getName());
         }
+        checkStartedOrderExists();
         QuarkusTransaction.begin();
 
         OrderStatusEntity newOrderStatus = mapper.getNewOrderStatus(orderDTO, newStatus);
         repository.persist(newOrderStatus);
 
         QuarkusTransaction.commit();
+        return newOrderStatus;
+    }
+
+    private void checkStartedOrderExists() {
+        Optional<OrderStatusEntity> optionalStartedOrder = repository.stream("status", OrderStatusType.STARTED)
+                .findAny();
+        if (optionalStartedOrder.isPresent()) {
+            throw new ApplicationRuntimeException(ServerErrorEnum.ORDER_ALREADY_STARTED, optionalStartedOrder.get().getOrderName());
+        }
     }
 
     private void changeStatusOnExistingEntity(OrderStatusEntity orderStatusEntity, OrderStatusType newStatus) {
@@ -88,6 +99,7 @@ public class OrderStatusService {
                 if (!newStatus.equals(OrderStatusType.STARTED)) {
                     throw getStatusTransitionException(oldStatus, newStatus);
                 }
+                checkStartedOrderExists();
             }
             case COMPLETED -> throw getStatusTransitionException(oldStatus, newStatus);
         }
