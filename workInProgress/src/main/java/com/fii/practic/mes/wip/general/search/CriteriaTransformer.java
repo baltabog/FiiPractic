@@ -71,8 +71,7 @@ public final class CriteriaTransformer {
         }
 
         if (isSingleValueOperator(criteria.getOperator()) && CollectionUtils.size(criteria.getValues()) != 1) {
-                throw new ApplicationRuntimeException(ServerErrorEnum.QUERY_INVALID_FILTER_UNARY_OPERATOR_MULTI_VALUES, criteria.getPropertyName());
-            }
+            throw new ApplicationRuntimeException(ServerErrorEnum.QUERY_INVALID_FILTER_UNARY_OPERATOR_MULTI_VALUES, criteria.getPropertyName());
         }
     }
 

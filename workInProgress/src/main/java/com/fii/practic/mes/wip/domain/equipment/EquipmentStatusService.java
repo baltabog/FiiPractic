@@ -82,7 +82,7 @@ public class EquipmentStatusService {
         EquipmentStatusEntity equipmentNewStatusEntity = saveNewEquipmentStatus(updateEquipmentStatusRequest, activeOrder);
         response.setOrder(new IdentityDTO().name(activeOrder.getOrderName()).uuid(activeOrder.getOrderUuid()));
         response.setEquipmentStatus(equipmentNewStatusEntity.getStatus());
-        response.setLastChange(equipmentNewStatusEntity.getUpdated().atOffset(OffsetDateTime.now().getOffset()));
+        response.setLastChange(equipmentNewStatusEntity.getTimestamp().atOffset(OffsetDateTime.now().getOffset()));
 
         QuarkusTransaction.commit();
 
