@@ -71,8 +71,7 @@ public class OrderStatusService {
     }
 
     private void checkOtherStartedOrderExists(String referenceOrderName) {
-        Optional<OrderStatusEntity> optionalStartedOrder = repository.stream("status", OrderStatusType.STARTED)
-                .findAny();
+        Optional<OrderStatusEntity> optionalStartedOrder = repository.getActiveOrder();
         if (optionalStartedOrder.isPresent() && !optionalStartedOrder.get().getOrderName().equals(referenceOrderName)) {
             throw new ApplicationRuntimeException(ServerErrorEnum.ORDER_ALREADY_STARTED, optionalStartedOrder.get().getOrderName());
         }

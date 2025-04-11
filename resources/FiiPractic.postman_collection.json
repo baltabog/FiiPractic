@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "d681725c-0e20-4473-a74b-3fef6c09d937",
+		"_postman_id": "41513f08-f136-4395-ba17-ae77091bf924",
 		"name": "FiiPractic",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28439367",
-		"_collection_link": "https://orange-zodiac-182687.postman.co/workspace/FII-Practic~864f2f56-3902-4ef9-ac01-ca84fb738d86/collection/28439367-d681725c-0e20-4473-a74b-3fef6c09d937?action=share&source=collection_link&creator=28439367"
+		"_exporter_id": "24478282",
+		"_collection_link": "https://orange-zodiac-182687.postman.co/workspace/onePULSE~48e64d8c-df9e-4436-8275-9715db8ef0af/collection/24478282-41513f08-f136-4395-ba17-ae77091bf924?action=share&source=collection_link&creator=24478282"
 	},
 	"item": [
 		{
@@ -291,7 +291,7 @@
 					"name": "materials",
 					"item": [
 						{
-							"name": "craeteMaterial",
+							"name": "createMaterial",
 							"event": [
 								{
 									"listen": "test",
@@ -334,1189 +334,109 @@
 					]
 				},
 				{
-					"name": "demo-steps",
+					"name": "processPlan",
 					"item": [
 						{
-							"name": "createEqTypes",
-							"item": [
-								{
-									"name": "createEqType-implanter",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('eqType.implanter.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('eqType.implanter.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
+							"name": "searchByOrder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sortBy\": \"desc:name\",\r\n    \"offset\": 0,\r\n    \"limit\": 100,\r\n    \"filter\": {\r\n        \"outerOperator\": \"and\",\r\n        \"criteria\": [\r\n            {\r\n                \"propertyName\": \"orderUuid\",\r\n                \"operator\": \"eq\",\r\n                \"values\": [\"e506e9b4-a50c-4ebb-809b-55a0a3b69380\"]\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"implanter\",\r\n    \"description\": \"Equipment type: Implanter\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/equipments/types",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"equipments",
-												"types"
-											]
-										}
-									},
-									"response": []
+									}
 								},
-								{
-									"name": "createEqType-transport",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('eqType.transport.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('eqType.transport.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/plans/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
 									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"transport\",\r\n    \"description\": \"Equipment type: Transport\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/equipments/types",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"equipments",
-												"types"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "createEquipment",
-							"item": [
-								{
-									"name": "implanters",
-									"item": [
-										{
-											"name": "createTool-implanter1",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"if (pm.response.code == 200) {\r",
-															"    const jsonData = pm.response.json();\r",
-															"    pm.environment.set('tool.implanter1.uuid', jsonData.uuid);\r",
-															"    pm.environment.set('tool.implanter1.name', jsonData.name);\r",
-															"} else {\r",
-															"    throw new Error(\"unexpected status\")\r",
-															"}"
-														],
-														"type": "text/javascript",
-														"packages": {}
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\r\n    \"name\": \"Implanter1\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.implanter.name}}\",\r\n        \"uuid\": \"{{eqType.implanter.uuid}}\"\r\n    },\r\n    \"alias\": \"Imp1\",\r\n    \"active\": \"true\"\r\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "http://localhost:5000/administrator/equipments/tools",
-													"protocol": "http",
-													"host": [
-														"localhost"
-													],
-													"port": "5000",
-													"path": [
-														"administrator",
-														"equipments",
-														"tools"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "createTool-implanter2",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"if (pm.response.code == 200) {\r",
-															"    const jsonData = pm.response.json();\r",
-															"    pm.environment.set('tool.implanter2.uuid', jsonData.uuid);\r",
-															"    pm.environment.set('tool.implanter2.name', jsonData.name);\r",
-															"} else {\r",
-															"    throw new Error(\"unexpected status\")\r",
-															"}"
-														],
-														"type": "text/javascript",
-														"packages": {}
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\r\n    \"name\": \"Implanter2\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.implanter.name}}\",\r\n        \"uuid\": \"{{eqType.implanter.uuid}}\"\r\n    },\r\n    \"alias\": \"Imp2\",\r\n    \"active\": \"true\"\r\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "http://localhost:5000/administrator/equipments/tools",
-													"protocol": "http",
-													"host": [
-														"localhost"
-													],
-													"port": "5000",
-													"path": [
-														"administrator",
-														"equipments",
-														"tools"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "createTool-implanter3",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"if (pm.response.code == 200) {\r",
-															"    const jsonData = pm.response.json();\r",
-															"    pm.environment.set('tool.implanter3.uuid', jsonData.uuid);\r",
-															"    pm.environment.set('tool.implanter3.name', jsonData.name);\r",
-															"} else {\r",
-															"    throw new Error(\"unexpected status\")\r",
-															"}"
-														],
-														"type": "text/javascript",
-														"packages": {}
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\r\n    \"name\": \"Implanter3\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.implanter.name}}\",\r\n        \"uuid\": \"{{eqType.implanter.uuid}}\"\r\n    },\r\n    \"alias\": \"Imp3\",\r\n    \"active\": \"true\"\r\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "http://localhost:5000/administrator/equipments/tools",
-													"protocol": "http",
-													"host": [
-														"localhost"
-													],
-													"port": "5000",
-													"path": [
-														"administrator",
-														"equipments",
-														"tools"
-													]
-												}
-											},
-											"response": []
-										}
-									]
-								},
-								{
-									"name": "transport",
-									"item": [
-										{
-											"name": "createTool-band1",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"if (pm.response.code == 200) {\r",
-															"    const jsonData = pm.response.json();\r",
-															"    pm.environment.set('tool.band1.uuid', jsonData.uuid);\r",
-															"    pm.environment.set('tool.band1.name', jsonData.name);\r",
-															"} else {\r",
-															"    throw new Error(\"unexpected status\")\r",
-															"}"
-														],
-														"type": "text/javascript",
-														"packages": {}
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\r\n    \"name\": \"Band1\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.transport.name}}\",\r\n        \"uuid\": \"{{eqType.transport.uuid}}\"\r\n    },\r\n    \"active\": \"true\"\r\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "http://localhost:5000/administrator/equipments/tools",
-													"protocol": "http",
-													"host": [
-														"localhost"
-													],
-													"port": "5000",
-													"path": [
-														"administrator",
-														"equipments",
-														"tools"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "createTool-band2",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"if (pm.response.code == 200) {\r",
-															"    const jsonData = pm.response.json();\r",
-															"    pm.environment.set('tool.band2.uuid', jsonData.uuid);\r",
-															"    pm.environment.set('tool.band2.name', jsonData.name);\r",
-															"} else {\r",
-															"    throw new Error(\"unexpected status\")\r",
-															"}"
-														],
-														"type": "text/javascript",
-														"packages": {}
-													}
-												}
-											],
-											"request": {
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\r\n    \"name\": \"Band2\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.transport.name}}\",\r\n        \"uuid\": \"{{eqType.transport.uuid}}\"\r\n    },\r\n    \"active\": \"true\"\r\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "http://localhost:5000/administrator/equipments/tools",
-													"protocol": "http",
-													"host": [
-														"localhost"
-													],
-													"port": "5000",
-													"path": [
-														"administrator",
-														"equipments",
-														"tools"
-													]
-												}
-											},
-											"response": []
-										}
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"plans",
+										"search"
 									]
 								}
-							]
-						},
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "processStep",
+					"item": [
 						{
-							"name": "materials",
-							"item": [
-								{
-									"name": "craeteMaterial-board1",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.board1.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.board1.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
+							"name": "searchByOrder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sortBy\": \"desc:name\",\r\n    \"offset\": 0,\r\n    \"limit\": 100,\r\n    \"filter\": {\r\n        \"outerOperator\": \"and\",\r\n        \"criteria\": [\r\n            {\r\n                \"propertyName\": \"orderUuid\",\r\n                \"operator\": \"in\",\r\n                \"values\": [\"e506e9b4-a50c-4ebb-809b-55a0a3b69380\"]\r\n            },\r\n            {\r\n                \"propertyName\": \"withEquipment\",\r\n                \"operator\": \"in\",\r\n                \"values\": [\"996f462f-e338-4937-aff5-77eae531f639\"]\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"board1\",\r\n    \"description\": \"this is an empty board\",\r\n    \"availableQuantity\": 1000,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
+									}
 								},
-								{
-									"name": "craeteMaterial-board2",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.board2.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.board2.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
 									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"board2\",\r\n    \"description\": \"this is an empty board with one resistance\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "craeteMaterial-board3",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.board3.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.board3.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"board3\",\r\n    \"description\": \"this is an empty board with 2 resistances\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "craeteMaterial-board4",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.board4.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.board4.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"board4\",\r\n    \"description\": \"this is an empty board with 3 resistances\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "craeteMaterial-brokenBoard",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.brokenBoard.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.brokenBoard.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"brokenBoard\",\r\n    \"description\": \"this is an brokenBoard which can not be used in a feature step\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "craeteMaterial-resistance",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.resistance.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.resistance.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"resistance\",\r\n    \"description\": \"this is a rezistence\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "craeteMaterial-solderPaste",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('material.solderPaste.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('material.solderPaste.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"solder paste\",\r\n    \"description\": \"this is solder paste used to mount a rezistence on a board\",\r\n    \"availableQuantity\": 5000000,\r\n    \"quantityUnit\": \"qg\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/materials",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"materials"
-											]
-										}
-									},
-									"response": []
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps",
+										"search"
+									]
 								}
-							]
-						},
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "orders",
+					"item": [
 						{
-							"name": "processStep",
-							"item": [
-								{
-									"name": "createPS-step1",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('ps.step1.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('ps.step1.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
+							"name": "search",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
 										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"step1\",\r\n    \"description\": \"material.board1+material.resistance+material.solderPaste-->tool.implanter1-ok-->material.board2 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board1.name}}\",\r\n            \"uuid\": \"{{material.board1.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.resistance.name}}\",\r\n            \"uuid\": \"{{material.resistance.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.solderPaste.name}}\",\r\n            \"uuid\": \"{{material.solderPaste.uuid}}\",\r\n            \"quantity\": 8\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.implanter1.name}}\",\r\n            \"uuid\": \"{{tool.implanter1.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/steps",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"steps"
-											]
-										}
-									},
-									"response": []
+									}
 								},
-								{
-									"name": "createPS-step2",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('ps.step2.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('ps.step2.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
+								"url": {
+									"raw": "http://localhost:5000/administrator/orders/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
 									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"step2\",\r\n    \"description\": \"material.board2-->tool.band1-ok-->material.board2 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.band1.name}}\",\r\n            \"uuid\": \"{{tool.band1.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/steps",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"steps"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "createPS-step3",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('ps.step3.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('ps.step3.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"step3\",\r\n    \"description\": \"material.board2+material.resistance+material.solderPaste-->tool.implanter1-ok-->material.board3 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.resistance.name}}\",\r\n            \"uuid\": \"{{material.resistance.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.solderPaste.name}}\",\r\n            \"uuid\": \"{{material.solderPaste.uuid}}\",\r\n            \"quantity\": 8\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.implanter2.name}}\",\r\n            \"uuid\": \"{{tool.implanter2.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/steps",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"steps"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "createPS-step4",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('ps.step4.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('ps.step4.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"step4\",\r\n    \"description\": \"material.board3-->tool.band1-ok-->material.board3 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.band2.name}}\",\r\n            \"uuid\": \"{{tool.band2.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/steps",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"steps"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "createPS-step5",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('ps.step5.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('ps.step5.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"step5\",\r\n    \"description\": \"material.board3+material.resistance+material.solderPaste-->tool.implanter1-ok-->material.board4 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.resistance.name}}\",\r\n            \"uuid\": \"{{material.resistance.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.solderPaste.name}}\",\r\n            \"uuid\": \"{{material.solderPaste.uuid}}\",\r\n            \"quantity\": 8\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.implanter3.name}}\",\r\n            \"uuid\": \"{{tool.implanter3.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board4.name}}\",\r\n            \"uuid\": \"{{material.board4.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/steps",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"steps"
-											]
-										}
-									},
-									"response": []
+									"port": "5000",
+									"path": [
+										"administrator",
+										"orders",
+										"search"
+									]
 								}
-							]
-						},
-						{
-							"name": "processPlan",
-							"item": [
-								{
-									"name": "createPP-plan1",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('pplan.plan1.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('pplan.plan1.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"pplan1\",\r\n    \"description\": \"pstep.step1 -> pstep.step2 -> pstep.step3\",\r\n    \"orderedProcessSteps\": [\r\n        {\r\n            \"name\": \"{{ps.step1.name}}\",\r\n            \"uuid\": \"{{ps.step1.uuid}}\",\r\n            \"orderInProcess\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step2.name}}\",\r\n            \"uuid\": \"{{ps.step2.uuid}}\",\r\n            \"orderInProcess\": 2\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step3.name}}\",\r\n            \"uuid\": \"{{ps.step3.uuid}}\",\r\n            \"orderInProcess\": 3\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/plans",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"plans"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "createPP-plan2",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('pplan.plan2.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('pplan.plan2.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"pplan2\",\r\n    \"description\": \"pstep.step1 -> pstep.step2 -> pstep.step3 -> pstep.step4 -> pstep.step5\",\r\n    \"orderedProcessSteps\": [\r\n        {\r\n            \"name\": \"{{ps.step1.name}}\",\r\n            \"uuid\": \"{{ps.step1.uuid}}\",\r\n            \"orderInProcess\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step2.name}}\",\r\n            \"uuid\": \"{{ps.step2.uuid}}\",\r\n            \"orderInProcess\": 2\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step3.name}}\",\r\n            \"uuid\": \"{{ps.step3.uuid}}\",\r\n            \"orderInProcess\": 3\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step4.name}}\",\r\n            \"uuid\": \"{{ps.step4.uuid}}\",\r\n            \"orderInProcess\": 4\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step5.name}}\",\r\n            \"uuid\": \"{{ps.step5.uuid}}\",\r\n            \"orderInProcess\": 5\r\n        }\r\n    ]\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/processes/plans",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"processes",
-												"plans"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "order",
-							"item": [
-								{
-									"name": "createOrder-o1Boards3",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('order.o1Boards3.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('order.o1Boards3.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"o1Boards3\",\r\n    \"description\": \"500 * board3\",\r\n    \"process\": {\r\n        \"name\": \"{{pplan.plan1.name}}\",\r\n        \"uuid\": \"{{pplan.plan1.uuid}}\"\r\n    },\r\n    \"quantity\": 500\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/orders",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"orders"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "createOrder-o2Boards3",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('order.o2Boards3.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('order.o2Boards3.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"o2Boards3\",\r\n    \"description\": \"250 * board3\",\r\n    \"process\": {\r\n        \"name\": \"{{pplan.plan1.name}}\",\r\n        \"uuid\": \"{{pplan.plan1.uuid}}\"\r\n    },\r\n    \"quantity\": 250\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/orders",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"orders"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "createOrder-o1Boards4",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"if (pm.response.code == 200) {\r",
-													"    const jsonData = pm.response.json();\r",
-													"    pm.environment.set('order.o1Boards3.uuid', jsonData.uuid);\r",
-													"    pm.environment.set('order.o1Boards3.name', jsonData.name);\r",
-													"} else {\r",
-													"    throw new Error(\"unexpected status\")\r",
-													"}"
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"o1Boards4\",\r\n    \"description\": \"100 * board4\",\r\n    \"process\": {\r\n        \"name\": \"{{pplan.plan2.name}}\",\r\n        \"uuid\": \"{{pplan.plan2.uuid}}\"\r\n    },\r\n    \"quantity\": 100\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "http://localhost:5000/administrator/orders",
-											"protocol": "http",
-											"host": [
-												"localhost"
-											],
-											"port": "5000",
-											"path": [
-												"administrator",
-												"orders"
-											]
-										}
-									},
-									"response": []
-								}
-							]
+							},
+							"response": []
 						}
 					]
 				},
@@ -1559,12 +479,12 @@
 					"name": "orderStatus",
 					"item": [
 						{
-							"name": "changeOrderStatus",
+							"name": "getOrderStatusByOrderName",
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:6000/workInProgress/orders/afb4cd95-9ff3-48be-a76c-6acd2dc801b0/status/",
+									"raw": "http://localhost:6000/workInProgress/orders/{{order.o1Boards3.name}}/status",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1573,21 +493,20 @@
 									"path": [
 										"workInProgress",
 										"orders",
-										"afb4cd95-9ff3-48be-a76c-6acd2dc801b0",
-										"status",
-										""
+										"{{order.o1Boards3.name}}",
+										"status"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "getOrderStatusByOrderName",
+							"name": "changeOrderStatus",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:6000/workInProgress/orders/o1Boards3/status",
+									"raw": "http://localhost:6000/workInProgress/orders/{{order.o1Boards3.uuid}}/status/STARTED",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1596,14 +515,55 @@
 									"path": [
 										"workInProgress",
 										"orders",
-										"o1Boards3",
-										"status"
+										"{{order.o1Boards3.uuid}}",
+										"status",
+										"STARTED"
 									]
 								}
 							},
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "equipmentSteps",
+					"item": [
+						{
+							"name": "checkEquipmentStatus",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter1.uuid}}\",\r\n    \"name\": \"{{tool.implanter1.name}}\"\r\n  },\r\n  \"inputStatus\": \"STOP\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status/check",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status",
+										"check"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "demoSteps",
+					"item": []
 				},
 				{
 					"name": "metrics",
@@ -1634,6 +594,2058 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "demo-steps",
+			"item": [
+				{
+					"name": "createEqTypes",
+					"item": [
+						{
+							"name": "createEqType-implanter",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('eqType.implanter.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('eqType.implanter.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"implanter\",\r\n    \"description\": \"Equipment type: Implanter\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/equipments/types",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"equipments",
+										"types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createEqType-transport",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('eqType.transport.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('eqType.transport.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"transport\",\r\n    \"description\": \"Equipment type: Transport\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/equipments/types",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"equipments",
+										"types"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "createEquipment",
+					"item": [
+						{
+							"name": "implanters",
+							"item": [
+								{
+									"name": "createTool-implanter1",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code == 200) {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.environment.set('tool.implanter1.uuid', jsonData.uuid);\r",
+													"    pm.environment.set('tool.implanter1.name', jsonData.name);\r",
+													"} else {\r",
+													"    throw new Error(\"unexpected status\")\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Implanter1\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.implanter.name}}\",\r\n        \"uuid\": \"{{eqType.implanter.uuid}}\"\r\n    },\r\n    \"alias\": \"Imp1\",\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "createTool-implanter2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code == 200) {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.environment.set('tool.implanter2.uuid', jsonData.uuid);\r",
+													"    pm.environment.set('tool.implanter2.name', jsonData.name);\r",
+													"} else {\r",
+													"    throw new Error(\"unexpected status\")\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Implanter2\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.implanter.name}}\",\r\n        \"uuid\": \"{{eqType.implanter.uuid}}\"\r\n    },\r\n    \"alias\": \"Imp2\",\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "createTool-implanter3",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code == 200) {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.environment.set('tool.implanter3.uuid', jsonData.uuid);\r",
+													"    pm.environment.set('tool.implanter3.name', jsonData.name);\r",
+													"} else {\r",
+													"    throw new Error(\"unexpected status\")\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Implanter3\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.implanter.name}}\",\r\n        \"uuid\": \"{{eqType.implanter.uuid}}\"\r\n    },\r\n    \"alias\": \"Imp3\",\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "transport",
+							"item": [
+								{
+									"name": "createTool-band1",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code == 200) {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.environment.set('tool.band1.uuid', jsonData.uuid);\r",
+													"    pm.environment.set('tool.band1.name', jsonData.name);\r",
+													"} else {\r",
+													"    throw new Error(\"unexpected status\")\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Band1\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.transport.name}}\",\r\n        \"uuid\": \"{{eqType.transport.uuid}}\"\r\n    },\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "createTool-band2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code == 200) {\r",
+													"    const jsonData = pm.response.json();\r",
+													"    pm.environment.set('tool.band2.uuid', jsonData.uuid);\r",
+													"    pm.environment.set('tool.band2.name', jsonData.name);\r",
+													"} else {\r",
+													"    throw new Error(\"unexpected status\")\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Band2\",\r\n    \"equipmentTypeIdentity\": {\r\n        \"name\": \"{{eqType.transport.name}}\",\r\n        \"uuid\": \"{{eqType.transport.uuid}}\"\r\n    },\r\n    \"active\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5000/administrator/equipments/tools",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5000",
+											"path": [
+												"administrator",
+												"equipments",
+												"tools"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "materials",
+					"item": [
+						{
+							"name": "createMaterial-board1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.board1.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.board1.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"board1\",\r\n    \"description\": \"this is an empty board\",\r\n    \"availableQuantity\": 1000,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createMaterial-board2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.board2.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.board2.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"board2\",\r\n    \"description\": \"this is an empty board with one resistance\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createMaterial-board3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.board3.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.board3.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"board3\",\r\n    \"description\": \"this is an empty board with 2 resistances\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createMaterial-board4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.board4.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.board4.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"board4\",\r\n    \"description\": \"this is an empty board with 3 resistances\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createMaterial-brokenBoard",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.brokenBoard.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.brokenBoard.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"brokenBoard\",\r\n    \"description\": \"this is an brokenBoard which can not be used in a feature step\",\r\n    \"availableQuantity\": 0,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createMaterial-resistance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.resistance.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.resistance.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"resistance\",\r\n    \"description\": \"this is a rezistence\",\r\n    \"availableQuantity\": 1000000,\r\n    \"quantityUnit\": \"pieces\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createMaterial-solderPaste",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('material.solderPaste.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('material.solderPaste.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"solder paste\",\r\n    \"description\": \"this is solder paste used to mount a rezistence on a board\",\r\n    \"availableQuantity\": 5000000,\r\n    \"quantityUnit\": \"qg\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "processStep",
+					"item": [
+						{
+							"name": "createPS-step1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('ps.step1.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('ps.step1.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"step1\",\r\n    \"description\": \"material.board1+material.resistance+material.solderPaste-->tool.implanter1-ok-->material.board2 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board1.name}}\",\r\n            \"uuid\": \"{{material.board1.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.resistance.name}}\",\r\n            \"uuid\": \"{{material.resistance.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.solderPaste.name}}\",\r\n            \"uuid\": \"{{material.solderPaste.uuid}}\",\r\n            \"quantity\": 8\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.implanter1.name}}\",\r\n            \"uuid\": \"{{tool.implanter1.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createPS-step2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('ps.step2.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('ps.step2.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"step2\",\r\n    \"description\": \"material.board2-->tool.band1-ok-->material.board2 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.band1.name}}\",\r\n            \"uuid\": \"{{tool.band1.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createPS-step3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('ps.step3.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('ps.step3.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"step3\",\r\n    \"description\": \"material.board2+material.resistance+material.solderPaste-->tool.implanter1-ok-->material.board3 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board2.name}}\",\r\n            \"uuid\": \"{{material.board2.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.resistance.name}}\",\r\n            \"uuid\": \"{{material.resistance.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.solderPaste.name}}\",\r\n            \"uuid\": \"{{material.solderPaste.uuid}}\",\r\n            \"quantity\": 8\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.implanter2.name}}\",\r\n            \"uuid\": \"{{tool.implanter2.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createPS-step4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('ps.step4.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('ps.step4.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"step4\",\r\n    \"description\": \"material.board3-->tool.band1-ok-->material.board3 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.band2.name}}\",\r\n            \"uuid\": \"{{tool.band2.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createPS-step5",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('ps.step5.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('ps.step5.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"step5\",\r\n    \"description\": \"material.board3+material.resistance+material.solderPaste-->tool.implanter1-ok-->material.board4 -nok-> material.brokenBoard\",\r\n    \"inputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board3.name}}\",\r\n            \"uuid\": \"{{material.board3.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.resistance.name}}\",\r\n            \"uuid\": \"{{material.resistance.uuid}}\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{material.solderPaste.name}}\",\r\n            \"uuid\": \"{{material.solderPaste.uuid}}\",\r\n            \"quantity\": 8\r\n        }\r\n    ],\r\n    \"equipments\": [\r\n        {\r\n            \"name\": \"{{tool.implanter3.name}}\",\r\n            \"uuid\": \"{{tool.implanter3.uuid}}\"\r\n        }\r\n    ],\r\n    \"successOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.board4.name}}\",\r\n            \"uuid\": \"{{material.board4.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"failOutputMaterials\": [\r\n        {\r\n            \"name\": \"{{material.brokenBoard.name}}\",\r\n            \"uuid\": \"{{material.brokenBoard.uuid}}\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/steps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"steps"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "processPlan",
+					"item": [
+						{
+							"name": "createPP-plan1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('pplan.plan1.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('pplan.plan1.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"pplan1\",\r\n    \"description\": \"pstep.step1 -> pstep.step2 -> pstep.step3\",\r\n    \"orderedProcessSteps\": [\r\n        {\r\n            \"name\": \"{{ps.step1.name}}\",\r\n            \"uuid\": \"{{ps.step1.uuid}}\",\r\n            \"orderInProcess\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step2.name}}\",\r\n            \"uuid\": \"{{ps.step2.uuid}}\",\r\n            \"orderInProcess\": 2\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step3.name}}\",\r\n            \"uuid\": \"{{ps.step3.uuid}}\",\r\n            \"orderInProcess\": 3\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/plans",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"plans"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createPP-plan2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('pplan.plan2.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('pplan.plan2.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"pplan2\",\r\n    \"description\": \"pstep.step1 -> pstep.step2 -> pstep.step3 -> pstep.step4 -> pstep.step5\",\r\n    \"orderedProcessSteps\": [\r\n        {\r\n            \"name\": \"{{ps.step1.name}}\",\r\n            \"uuid\": \"{{ps.step1.uuid}}\",\r\n            \"orderInProcess\": 1\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step2.name}}\",\r\n            \"uuid\": \"{{ps.step2.uuid}}\",\r\n            \"orderInProcess\": 2\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step3.name}}\",\r\n            \"uuid\": \"{{ps.step3.uuid}}\",\r\n            \"orderInProcess\": 3\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step4.name}}\",\r\n            \"uuid\": \"{{ps.step4.uuid}}\",\r\n            \"orderInProcess\": 4\r\n        },\r\n        {\r\n            \"name\": \"{{ps.step5.name}}\",\r\n            \"uuid\": \"{{ps.step5.uuid}}\",\r\n            \"orderInProcess\": 5\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/processes/plans",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"processes",
+										"plans"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "order",
+					"item": [
+						{
+							"name": "createOrder-o1Boards3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('order.o1Boards3.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('order.o1Boards3.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"o1Boards3\",\r\n    \"description\": \"500 * board3\",\r\n    \"process\": {\r\n        \"name\": \"{{pplan.plan1.name}}\",\r\n        \"uuid\": \"{{pplan.plan1.uuid}}\"\r\n    },\r\n    \"quantity\": 500\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createOrder-o2Boards3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('order.o2Boards3.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('order.o2Boards3.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"o2Boards3\",\r\n    \"description\": \"250 * board3\",\r\n    \"process\": {\r\n        \"name\": \"{{pplan.plan1.name}}\",\r\n        \"uuid\": \"{{pplan.plan1.uuid}}\"\r\n    },\r\n    \"quantity\": 250\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createOrder-o1Boards4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.environment.set('order.o1Boards4.uuid', jsonData.uuid);\r",
+											"    pm.environment.set('order.o1Boards4.name', jsonData.name);\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"o1Boards4\",\r\n    \"description\": \"100 * board4\",\r\n    \"process\": {\r\n        \"name\": \"{{pplan.plan2.name}}\",\r\n        \"uuid\": \"{{pplan.plan2.uuid}}\"\r\n    },\r\n    \"quantity\": 100\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "startOrders",
+					"item": [
+						{
+							"name": "change order O1Boards4 status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.identity.uuid).to.equal(pm.environment.get(\"order.o1Boards4.uuid\"));\r",
+											"    pm.expect(jsonData.identity.name).to.equal(pm.environment.get(\"order.o1Boards4.name\"));\r",
+											"    pm.expect(jsonData.status).to.equal(\"STARTED\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/orders/{{order.o1Boards4.uuid}}/status/STARTED",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"orders",
+										"{{order.o1Boards4.uuid}}",
+										"status",
+										"STARTED"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "try change order O1Boards3 status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 400) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.equal(\"Order named <o1Boards4> is started; it needs to be completed or paused before starting another one\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/orders/{{order.o1Boards3.uuid}}/status/STARTED",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"orders",
+										"{{order.o1Boards3.uuid}}",
+										"status",
+										"STARTED"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change order O1Boards4 status to PAUSED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.identity.uuid).to.equal(pm.environment.get(\"order.o1Boards4.uuid\"));\r",
+											"    pm.expect(jsonData.identity.name).to.equal(pm.environment.get(\"order.o1Boards4.name\"));\r",
+											"    pm.expect(jsonData.status).to.equal(\"PAUSED\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/orders/{{order.o1Boards4.uuid}}/status/PAUSED",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"orders",
+										"{{order.o1Boards4.uuid}}",
+										"status",
+										"PAUSED"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change order O1Boards3 status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.identity.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.identity.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.status).to.equal(\"STARTED\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/orders/{{order.o1Boards3.uuid}}/status/STARTED",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"orders",
+										"{{order.o1Boards3.uuid}}",
+										"status",
+										"STARTED"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "processOneBoard",
+					"item": [
+						{
+							"name": "change tool.impl1 status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter1.uuid}}\",\r\n    \"name\": \"{{tool.implanter1.name}}\"\r\n  },\r\n  \"inputStatus\": \"START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.band1.uuid status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.band1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.band1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.band1.uuid}}\",\r\n    \"name\": \"{{tool.band1.name}}\"\r\n  },\r\n  \"inputStatus\": \"START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl2 status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter2.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter2.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter2.uuid}}\",\r\n    \"name\": \"{{tool.implanter2.name}}\"\r\n  },\r\n  \"inputStatus\": \"START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "try change tool.impl3 status to STARTED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 400) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.equal(\"Equipment <Band2> isn't part of active job\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.band2.uuid}}\",\r\n    \"name\": \"{{tool.band2.name}}\"\r\n  },\r\n  \"inputStatus\": \"START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl1 status to PROCESS_START",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"PROCESSING\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter1.uuid}}\",\r\n    \"name\": \"{{tool.implanter1.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl1 status to PROCESS_SUCCEED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter1.uuid}}\",\r\n    \"name\": \"{{tool.implanter1.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_SUCCEED\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.band1.uuid status to PROCESS_START",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.band1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.band1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"PROCESSING\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.band1.uuid}}\",\r\n    \"name\": \"{{tool.band1.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl1 status to PROCESS_START",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"PROCESSING\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter1.uuid}}\",\r\n    \"name\": \"{{tool.implanter1.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.band1.uuid status to PROCESS_SUCCEED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.band1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.band1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.band1.uuid}}\",\r\n    \"name\": \"{{tool.band1.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_SUCCEED\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl1 status to PROCESS_FAIL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter1.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter1.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter1.uuid}}\",\r\n    \"name\": \"{{tool.implanter1.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_FAIL\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl2 status to PROCESS_START",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter2.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter2.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"PROCESSING\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter2.uuid}}\",\r\n    \"name\": \"{{tool.implanter2.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_START\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change tool.impl2 status to PROCESS_SUCCEED",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code == 200) {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.order.uuid).to.equal(pm.environment.get(\"order.o1Boards3.uuid\"));\r",
+											"    pm.expect(jsonData.order.name).to.equal(pm.environment.get(\"order.o1Boards3.name\"));\r",
+											"    pm.expect(jsonData.equipment.uuid).to.equal(pm.environment.get(\"tool.implanter2.uuid\"));\r",
+											"    pm.expect(jsonData.equipment.name).to.equal(pm.environment.get(\"tool.implanter2.name\"));\r",
+											"    pm.expect(jsonData.equipmentStatus).to.equal(\"WAIT_FOR_MATERIALS\");\r",
+											"} else {\r",
+											"    throw new Error(\"unexpected status\")\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"equipment\": {\r\n    \"uuid\": \"{{tool.implanter2.uuid}}\",\r\n    \"name\": \"{{tool.implanter2.name}}\"\r\n  },\r\n  \"inputStatus\": \"PROCESS_SUCCEED\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:6000/workInProgress/equipment/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "6000",
+									"path": [
+										"workInProgress",
+										"equipment",
+										"status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "checksOnAdmin",
+					"item": [
+						{
+							"name": "getAllMaterials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/materials/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"materials",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAllOrders",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/administrator/orders/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"administrator",
+										"orders",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getStatistics",
+					"item": []
 				}
 			]
 		}
