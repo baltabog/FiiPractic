@@ -59,7 +59,7 @@ paths:
       tags:
         - Order
       operationId: getOrderStatusByName
-      summary: "Get order status information by order name"
+      summary: "Get last order status information by order name"
       parameters:
         - in: path
           name: name
