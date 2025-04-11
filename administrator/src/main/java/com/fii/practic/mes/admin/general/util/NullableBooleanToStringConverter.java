@@ -19,7 +19,7 @@ public class NullableBooleanToStringConverter implements AttributeConverter<Bool
     @Override
     public Boolean convertToEntityAttribute(String value) {
         if (value == null) {
-            return null;
+            return Boolean.FALSE;
         }
         return YES.equals(value);
     }
