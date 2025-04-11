@@ -7,17 +7,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 
 @Entity(name = OrderStatusEntity.ENTITY_NAME)
-@Table(name = OrderStatusEntity.TABLE_NAME,
-        uniqueConstraints = {
-            @UniqueConstraint(columnNames = {"ORDER_UUID"}, name = OrderStatusEntity.TABLE_NAME + "__ORDER_UUID"),
-            @UniqueConstraint(columnNames = {"ORDER_NAME"}, name = OrderStatusEntity.TABLE_NAME + "__ORDER_NAME")
-})
+@Table(name = OrderStatusEntity.TABLE_NAME)
 @Getter @Setter
 public class OrderStatusEntity extends AbstractEntity {
     public static final String ENTITY_NAME = "OrderStatus";

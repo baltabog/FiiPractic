@@ -27,9 +27,9 @@ public abstract class AbstractEntity implements Serializable {
     @SequenceGenerator(name = "entity_id_generator", sequenceName = "T_SEQUENCE__ID", allocationSize = 1)
     private Long id;
 
-    @Column(name = "UPDATED", nullable = false)
+    @Column(name = "TIMESTAMP", nullable = false)
     @Convert(converter = GmtDateTimeToEpochSecondsConverter.class)
-    private LocalDateTime updated;
+    private LocalDateTime timestamp;
 
     @Column(name = "UPDATED_BY", nullable = false)
     @NotEmpty
@@ -48,7 +48,7 @@ public abstract class AbstractEntity implements Serializable {
      */
     @PreUpdate
     protected void preUpdate() {
-        updated = LocalDateTime.now();
+        timestamp = LocalDateTime.now();
     }
 
     @Override
@@ -57,14 +57,14 @@ public abstract class AbstractEntity implements Serializable {
         if (!(o instanceof AbstractEntity that)) return false;
 
         if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(updated, that.updated)) return false;
+        if (!Objects.equals(timestamp, that.timestamp)) return false;
         return Objects.equals(updatedBy, that.updatedBy);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (updated != null ? updated.hashCode() : 0);
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
         result = 31 * result + (updatedBy != null ? updatedBy.hashCode() : 0);
         return result;
     }
