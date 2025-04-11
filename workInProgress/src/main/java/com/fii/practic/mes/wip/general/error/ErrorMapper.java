@@ -125,10 +125,10 @@ public class ErrorMapper implements ExceptionMapper<Exception> {
     private ApplicationRuntimeException handlePersistenceException(final PersistenceException ex) {
         Throwable cause = ex;
         while (cause != null) {
-            if (cause instanceof ConstraintViolationException) {
-                return handleConstraintViolationException((ConstraintViolationException) cause);
-            } else if (cause instanceof StaleObjectStateException) {
-                return handleStaleObjectStateException((StaleObjectStateException) cause);
+            if (cause instanceof ConstraintViolationException constraintViolationException) {
+                return handleConstraintViolationException(constraintViolationException);
+            } else if (cause instanceof StaleObjectStateException staleObjectStateException) {
+                return handleStaleObjectStateException(staleObjectStateException);
             }
 
             cause = cause.getCause();

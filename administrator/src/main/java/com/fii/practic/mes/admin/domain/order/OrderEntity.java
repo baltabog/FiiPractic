@@ -2,7 +2,6 @@ package com.fii.practic.mes.admin.domain.order;
 
 import com.fii.practic.mes.admin.domain.process.plan.ProcessPlanEntity;
 import com.fii.practic.mes.admin.general.AbstractEntity;
-import com.fii.practic.mes.admin.domain.process.plan.ProcessPlanEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

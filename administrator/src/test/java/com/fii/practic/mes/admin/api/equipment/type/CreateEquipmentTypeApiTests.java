@@ -31,7 +31,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 @QuarkusTest
-public class CreateEquipmentTypeApiTests {
+class CreateEquipmentTypeApiTests {
     public static final String PATH = "/administrator/equipments/types";
     @Inject
     ObjectMapper objectMapper;
@@ -39,7 +39,7 @@ public class CreateEquipmentTypeApiTests {
     EquipmentTypeService service;
 
     @Test
-    public void testCreateNoContentType() {
+    void testCreateNoContentType() {
         EquipmentTypeDTO inputBodyDto = new EquipmentTypeDTO()
                 .name("testType");
 
@@ -53,7 +53,7 @@ public class CreateEquipmentTypeApiTests {
     }
 
     @Test
-    public void testCreateNoInputBody() {
+    void testCreateNoInputBody() {
         Response requestResponse = given().body("")
                 .headers(getHeaders())
                 .request(Method.POST, PATH);
@@ -65,7 +65,7 @@ public class CreateEquipmentTypeApiTests {
     }
 
     @Test
-    public void testCreateWithNullName() {
+    void testCreateWithNullName() {
         EquipmentTypeDTO inputBodyDto = new EquipmentTypeDTO();
 
         Response requestResponse = given().body(getString(inputBodyDto))
@@ -78,7 +78,7 @@ public class CreateEquipmentTypeApiTests {
     }
 
     @Test
-    public void testCreateServiceLogicFailed() {
+    void testCreateServiceLogicFailed() {
         EquipmentTypeDTO inputBodyDto = new EquipmentTypeDTO().name("test");
         doThrow(new ApplicationRuntimeException(ServerErrorEnum.UNEXPECTED_EXCEPTION))
                 .when(service).create(ArgumentMatchers.any(EquipmentTypeDTO.class));
@@ -95,7 +95,7 @@ public class CreateEquipmentTypeApiTests {
         assertTrue(1 <= timer.count()); // this assert can be improved
     }
     @Test
-    public void testCreateServiceLogicPassed() {
+    void testCreateServiceLogicPassed() {
         EquipmentTypeDTO inputBodyDto = new EquipmentTypeDTO().name("test");
         doReturn(inputBodyDto
                     .uuid(UUID.randomUUID().toString())
@@ -123,9 +123,5 @@ public class CreateEquipmentTypeApiTests {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private <O> O getObject(String jsonString, Class<O> objectType) {
-        return objectMapper.convertValue(jsonString, objectType);
     }
 }
