@@ -12,7 +12,7 @@ public interface OrderStatusMapper {
     @Mapping(target = "orderUuid",      source = "uuid")
     @Mapping(target = "orderName",      source = "name")
     @Mapping(target = "status",         expression = "java( status )")
-    @Mapping(target = "updated", 		ignore = true)
+    @Mapping(target = "timestamp", 		ignore = true)
     OrderStatusEntity getNewOrderStatus(OrderDTO orderDTO, @Context OrderStatusType status);
 
     @Mapping(target = "identity.uuid",  source = "uuid")
@@ -22,6 +22,6 @@ public interface OrderStatusMapper {
 
     @Mapping(target = "identity.uuid",  source = "orderUuid")
     @Mapping(target = "identity.name",  source = "orderName")
-    @Mapping(target = "lastChange",     expression = "java(entity.getUpdated().atOffset(java.time.OffsetDateTime.now().getOffset()))")
+    @Mapping(target = "lastChange",     expression = "java(entity.getTimestamp().atOffset(java.time.OffsetDateTime.now().getOffset()))")
     OrderStatusDTO toOrderStatusDto(OrderStatusEntity entity);
 }

@@ -45,28 +45,30 @@ public class OrderStatusService {
                 new IdentityDTO().uuid(orderUuid),
                 OrderDTO.class);
 
+        QuarkusTransaction.begin();
         Optional<OrderStatusEntity> optionalOrderStatusEntity = repository.findByUuid(orderUuid);
 
         if (optionalOrderStatusEntity.isPresent()) {
-            changeStatusOnExistingEntity(optionalOrderStatusEntity.get(), newStatus);
-            return mapper.toOrderStatusDto(optionalOrderStatusEntity.get());
+            OrderStatusEntity orderStatusEntity = addNewStateForTrackedOrder(orderDTO, optionalOrderStatusEntity.get().getStatus(), newStatus);
+            QuarkusTransaction.commit();
+            return mapper.toOrderStatusDto(orderStatusEntity);
         } else {
-            OrderStatusEntity newOrderStatusEntity = createNewOrderStatusEntity(orderDTO, newStatus);
+            if (!newStatus.equals(OrderStatusType.STARTED)) {
+                throw new ApplicationRuntimeException(ServerErrorEnum.WRONG_FIRST_ORDER_STATUS, orderDTO.getName());
+            }
+            OrderStatusEntity newOrderStatusEntity = createNewOrderStatusEntity(orderDTO, OrderStatusType.STARTED);
+            QuarkusTransaction.commit();
             return mapper.toOrderStatusDto(newOrderStatusEntity);
         }
     }
 
     private OrderStatusEntity createNewOrderStatusEntity(OrderDTO orderDTO, OrderStatusType newStatus) {
-        if (!newStatus.equals(OrderStatusType.STARTED)) {
-            throw new ApplicationRuntimeException(ServerErrorEnum.WRONG_FIRST_ORDER_STATUS, orderDTO.getName());
-        }
+
         checkStartedOrderExists();
-        QuarkusTransaction.begin();
 
         OrderStatusEntity newOrderStatus = mapper.getNewOrderStatus(orderDTO, newStatus);
         repository.persist(newOrderStatus);
 
-        QuarkusTransaction.commit();
         return newOrderStatus;
     }
 
@@ -78,14 +80,10 @@ public class OrderStatusService {
         }
     }
 
-    private void changeStatusOnExistingEntity(OrderStatusEntity orderStatusEntity, OrderStatusType newStatus) {
-        checkStateTransition(orderStatusEntity.getStatus(), newStatus);
-        QuarkusTransaction.begin();
+    private OrderStatusEntity addNewStateForTrackedOrder(OrderDTO orderDTO, OrderStatusType oldStatus, OrderStatusType newStatus) {
+        checkStateTransition(oldStatus, newStatus);
 
-        orderStatusEntity.setStatus(newStatus);
-        repository.persist(orderStatusEntity);
-
-        QuarkusTransaction.commit();
+        return createNewOrderStatusEntity(orderDTO, newStatus);
     }
 
     private void checkStateTransition(OrderStatusType oldStatus, OrderStatusType newStatus) {
@@ -99,7 +97,6 @@ public class OrderStatusService {
                 if (!newStatus.equals(OrderStatusType.STARTED)) {
                     throw getStatusTransitionException(oldStatus, newStatus);
                 }
-                checkStartedOrderExists();
             }
             case COMPLETED -> throw getStatusTransitionException(oldStatus, newStatus);
         }
