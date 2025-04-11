@@ -53,36 +53,26 @@ paths:
       x-accepts: application/json
       x-tags:
         - tag: Order
-  /workInProgress/orders/status/search:
-    post:
+  /workInProgress/orders/{name}/status:
+    get:
       tags:
         - Order
-      operationId: searchOrders
-      summary: "Return a list of Orders with their statuses. <br />
-                Filter criteria: jobName (sorting also possible), status (sorting also possible), lastChange (sorting 
-                also possible)."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SearchType'
-        required: false
+      operationId: getOrderStatusByName
+      summary: "Get order status information by order name"
+      parameters:
+        - in: path
+          name: name
+          schema:
+            $ref: '#/components/schemas/nameType'
+          required: true
+          description: Name of the order to fetch its status
       responses:
         "200":
-          description: OK - Get matching filter criteria OrderStatuses
+          description: OK - OrderStatus
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/OrderStatusDTO'
-                type: array
-          headers:
-            Content-Range:
-              description: "Indicates where the partial responded items belongs to, e.g. \"items 1-20/538\""
-              explode: false
-              schema:
-                type: string
-              style: simple
+                $ref: '#/components/schemas/OrderStatusDTO'
       x-content-type: application/json
       x-accepts: application/json
       x-tags:
@@ -305,7 +295,7 @@ components:
           type: integer
           minimum: 0
           readOnly: true
-        smallerPeriod:
+        shortestPeriod:
           type: integer
           minimum: 0
           readOnly: true
@@ -320,7 +310,7 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/IdentityDTO'
+            $ref: '#/components/schemas/StatusTimeStatisticDTO'
 
     FilterParamType:
       example:

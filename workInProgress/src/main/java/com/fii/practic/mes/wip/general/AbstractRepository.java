@@ -34,6 +34,10 @@ public abstract class AbstractRepository<E extends AbstractEntity> implements Pa
 		}
 	}
 
+	public Optional<E> findByUuid(final String uuid) {
+		return findOneIfExist("uuid = ?1", uuid);
+	}
+
 	public Optional<E> findOneIfExist(final String query, Object... param) {
 		final List<E> entityList = list(query, param);
 		if (CollectionUtils.size(entityList) > 1) {

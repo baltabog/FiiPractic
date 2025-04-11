@@ -1,4 +1,4 @@
-package com.fii.practic.mes.wip.equipment;
+package com.fii.practic.mes.wip.domain.equipment;
 
 import com.fii.practic.mes.wip.general.AbstractEntity;
 import jakarta.persistence.Entity;
