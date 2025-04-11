@@ -19,6 +19,7 @@ public class ApplicationRuntimeException extends WebApplicationException {
         this.localDateTime = LocalDateTime.now();
     }
 
+    @Override
     public String getMessage() {
         if (ArrayUtils.isNotEmpty(args)) {
             return serverErrorEnum.getFallBackText().formatted((Object[]) args);

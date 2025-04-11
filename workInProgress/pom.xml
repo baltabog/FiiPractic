@@ -223,7 +223,6 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/../resources/administratorOpenAPI.yaml</inputSpec>
-<!--                            <templateDirectory>../resources/templates/client</templateDirectory>-->
                             <generatorName>java</generatorName>
                             <generateApis>true</generateApis>
                             <generateModels>true</generateModels>
